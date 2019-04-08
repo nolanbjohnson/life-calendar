@@ -1,3 +1,7 @@
 .App {
   text-align: center;
 }
+
+rect.date:hover {
+  cursor: help;
+}
