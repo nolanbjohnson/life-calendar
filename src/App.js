@@ -8,6 +8,7 @@ import EventForm from './components/EventForm'
 import BirthDateForm from './components/BirthDateForm'
 import DatePicker from './components/DatePicker'
 import LifeGrid from './components/LifeGrid'
+import EventsScreen from './screens/EventsScreen'
 import './App.css';
 
 class App extends Component {
@@ -84,13 +85,16 @@ class App extends Component {
       event[input[0]] = input[0] === "startDate" ? moment.utc(input[1]).format("YYYY-MM-DD") : input[1]
     }
 
+    if(! event.startDate instanceof Date) return
+    if(event.name==="") return
+
     eventsRef.push(event) // send event to firebase db
 
     console.log(event)
     
-    this.setState(prevState => (
-      { trips_and_events: [ ...prevState.trips_and_events,  event] }
-    ))
+    // this.setState(prevState => (
+    //   { trips_and_events: [ ...prevState.trips_and_events,  event] }
+    // ))
   }
 
   handleBirthDate = (e) => {
@@ -169,6 +173,7 @@ class App extends Component {
           <p>This is my take on the post <a href="https://waitbutwhy.com/2014/05/life-weeks.html">Your Life in Weeks</a> by Tim Urban of Wait But Why. Thanks, Tim, for this hugely influential concept (though most people I share it with find it at least a bit macabre).</p>
         </div>
         <div className="Main">
+          <EventsScreen events={trips_and_events} />
           <div className="fixed top-5 right-1 shadow-2 ba bg-white-70">
             <EventForm 
               onSubmit={ this.handleNewTripEvent }
