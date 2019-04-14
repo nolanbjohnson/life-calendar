@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment'
 import { range } from 'd3-array'
+import firebase from './firebase'
 import { getWeekNumber } from './helpers/utils'
 import Svg from './components/Svg'
 import EventForm from './components/EventForm'
@@ -19,18 +20,39 @@ class App extends Component {
     school_and_work: [
       {startDate: new Date('1985-11-03'), endDate: new Date('1991-11-02'), name: "Baby/Toddler"},
     ],
-    trips_and_events: [
-      {startDate: new Date('1985-11-03'), endDate: new Date('1985-11-03'), name: 'You were born!', emoji: '🎂'},
-      {startDate: new Date('1991-05-01'), endDate: new Date('1991-05-01'), name: 'Moved to Arizona', emoji: '🌵'},
-      {startDate: new Date('2014-08-01'), endDate: new Date('2014-08-01'), name: 'Move SDM to NYC', emoji: '🗽'},
-      {startDate: new Date('2015-04-01'), endDate: new Date('2015-04-01'), name: 'Moved to NYC', emoji: '🗽'},
-      {startDate: new Date('2011-02-05'), endDate: new Date('2011-02-11'), name: 'Moved to Madison, WI', emoji: '🧀'},
-    ],
+    // trips_and_events: [
+    //   {startDate: new Date('1985-11-03'), endDate: new Date('1985-11-03'), name: 'You were born!', emoji: '🎂'},
+    //   {startDate: new Date('1991-05-01'), endDate: new Date('1991-05-01'), name: 'Moved to Arizona', emoji: '🌵'},
+    //   {startDate: new Date('2014-08-01'), endDate: new Date('2014-08-01'), name: 'Move SDM to NYC', emoji: '🗽'},
+    //   {startDate: new Date('2015-04-01'), endDate: new Date('2015-04-01'), name: 'Moved to NYC', emoji: '🗽'},
+    //   {startDate: new Date('2011-02-05'), endDate: new Date('2011-02-11'), name: 'Moved to Madison, WI', emoji: '🧀'},
+    // ],
+    trips_and_events: [],
     homes: [
       {startDate: new Date('1985-11-03'), endDate: new Date('1991-05-01'), name: 'Canada', location: {lat: 52.136172, lon: -106.729138}}
     ],
     hovered: '',
     clicked: '',
+  }
+
+  componentDidMount() {
+    const eventsRef = firebase.database().ref('events');
+    eventsRef.on('value', snapshot => {
+      let events = snapshot.val();
+      let newState = [];
+      for (let event in events) {
+        newState.push({
+          id: event,
+          startDate: new Date(events[event].startDate),
+          endDate: new Date(events[event].endDate) || null,
+          name: events[event].name,
+          emoji: events[event].emoji,
+        });
+      }
+      this.setState({
+        trips_and_events: newState
+      });
+    });
   }
 
   onClick = (dateID) => {
@@ -51,18 +73,23 @@ class App extends Component {
 
   handleNewTripEvent = (e) => {
     e.preventDefault()
+
+    const eventsRef = firebase.database().ref('events') // set ref to firebase db
+
     const form = e.target
     const data = new FormData(form)
-    let newState = {}
+    let event = {}
 
     for(let input of data.entries()) {
-      newState[input[0]] = input[0] === "startDate" ? new Date(input[1]) : input[1]
+      event[input[0]] = input[0] === "startDate" ? moment.utc(input[1]).format("YYYY-MM-DD") : input[1]
     }
 
-    console.log(newState)
+    eventsRef.push(event) // send event to firebase db
+
+    console.log(event)
     
     this.setState(prevState => (
-      { trips_and_events: [ ...prevState.trips_and_events,  newState] }
+      { trips_and_events: [ ...prevState.trips_and_events,  event] }
     ))
   }
 

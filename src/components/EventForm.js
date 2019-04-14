@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import moment from 'moment'
 import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } from './FormElements'
 
 const EventForm = ({ onSubmit, initialStartDate }) => {
@@ -26,7 +27,7 @@ const EventForm = ({ onSubmit, initialStartDate }) => {
 	return (
 		<Form onSubmit={ handleSubmit }>
 			<FormSection>
-				<FormLabel htmlFor="startDate">Date</FormLabel>
+				<FormLabel htmlFor="startDate"><span role="img" aria-lable="today" onClick={ () => setStartDate(moment().format("YYYY-MM-DD")) }>📅</span> Date</FormLabel>
 				<FormInput 
 					name="startDate" 
 					type="date" 
