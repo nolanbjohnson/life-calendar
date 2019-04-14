@@ -13,4 +13,17 @@ const getWeekNumber = (d) => {
 }
 
 
-export { getWeekNumber }
+const colorSwitch = (index, row, now, opacity) => {
+      // return "rgba(255,255,255,1)"
+      if(index === 0 && row === 0) { return `rgba(100,149,237,1)` } else 
+      if(row < 6) { return `rgba(100,237,237,${opacity})` } else 
+      if(row < 11) { return `rgba(50,100,237,${opacity})` } else 
+      if(row < 14) { return `rgba(205,92,92,${opacity})` } else
+      if(row < 18) { return `rgba(92,205,92,${opacity})` } else
+      if(row < 22) { return `rgba(205,92,205,${opacity})` } else
+      // if(index < parseInt(52 * now)) { return `rgba(205,92,205,0.3)` } else
+      if(row < now - 1 || (index < Math.floor((now % 1) * 52) && row < now)) { return `hsla(${index*row / 2},100%,50%,${opacity})` } else 
+      return `rgba(255,255,255,${opacity})`
+}
+
+export { getWeekNumber, colorSwitch }
