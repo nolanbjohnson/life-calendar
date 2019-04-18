@@ -4,7 +4,6 @@ import { range } from 'd3-array'
 import firebase from './firebase'
 import { getWeekNumber } from './helpers/utils'
 import EventsScreen from './screens/EventsScreen'
-import LifeGridScreen from './screens/LifeGridScreen'
 import Svg from './components/Svg'
 import EventForm from './components/EventForm'
 import BirthDateForm from './components/BirthDateForm'
@@ -12,6 +11,12 @@ import DatePicker from './components/DatePicker'
 import LifeGrid from './components/LifeGrid'
 import { backgroundColorRandom } from './helpers/utils'
 import './App.css';
+
+//scaffolding
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import Nav from './Nav'
+import LifeGridScreen from './screens/LifeGridScreen'
+import lifegrid from './assets/lifegridcoarse.png'
 
 
 class App extends Component {
@@ -142,6 +147,27 @@ class App extends Component {
   
 
   render() {
+
+    return (
+      <Router>
+        <header style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>
+          <Link to="/"><img src={lifegrid} alt="lifegrid" style={{height:"70px", margin: "1rem"}} /></Link>
+          <Nav />
+        </header>
+        <Switch>
+          <Route path="/" exact component={LifeGridScreen}/>
+          <Route path="/events" exact render={() => <h2 style={{padding: "100px"}}>events</h2>}/>
+          <Route path="/stages" exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
+          <Route path="/explore" exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
+          <Route path="/impossibleyou" exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+          <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
+        </Switch>
+      </Router>
+
+    )
+
+
+
     const { birthEpoch, birthYear, birthDate, trips_and_events, homes, hovered, clicked, birthDateFormOpen, datePickerEditMode, selectStart, selectEnd, selecting } = this.state
     const birthDay = new Date(parseInt(birthEpoch))
     const svgWidth = 1000
@@ -173,8 +199,6 @@ class App extends Component {
     const weekNewYear = (52 - getWeekNumber(birthDate)[1]) % 52
 
     console.log(getWeekNumber(birthDate)[1], weekNewYear)
-
-    return <LifeGridScreen/>
 
     return (
       <div className="App mh3 mv4" style={{ minWidth: "950px" }} >
