@@ -3,13 +3,16 @@ import moment from 'moment'
 import { range } from 'd3-array'
 import firebase from './firebase'
 import { getWeekNumber } from './helpers/utils'
+import EventsScreen from './screens/EventsScreen'
+import LifeGridScreen from './screens/LifeGridScreen'
 import Svg from './components/Svg'
 import EventForm from './components/EventForm'
 import BirthDateForm from './components/BirthDateForm'
 import DatePicker from './components/DatePicker'
 import LifeGrid from './components/LifeGrid'
-import EventsScreen from './screens/EventsScreen'
+import { backgroundColorRandom } from './helpers/utils'
 import './App.css';
+
 
 class App extends Component {
   state = {
@@ -29,39 +32,62 @@ class App extends Component {
     //   {startDate: new Date('2011-02-05'), endDate: new Date('2011-02-11'), name: 'Moved to Madison, WI', emoji: '🧀'},
     // ],
     trips_and_events: [],
-    homes: [
-      {startDate: new Date('1985-11-03'), endDate: new Date('1991-05-01'), name: 'Canada', location: {lat: 52.136172, lon: -106.729138}}
-    ],
+    homes: [], // {startDate: new Date('1985-11-03'), endDate: new Date('1991-05-01'), name: 'Canada', location: {lat: 52.136172, lon: -106.729138}}
     hovered: '',
     clicked: '',
+    selectStart: '',
+    selectEnd: '',
+    selecting: false,
   }
 
   componentDidMount() {
     const eventsRef = firebase.database().ref('events');
     eventsRef.on('value', snapshot => {
       let events = snapshot.val();
-      let newState = [];
+      let eventsState = [];
       for (let event in events) {
-        newState.push({
+        eventsState.push({
           id: event,
           startDate: new Date(events[event].startDate),
-          endDate: new Date(events[event].endDate) || null,
+          endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
           name: events[event].name,
           emoji: events[event].emoji,
+          type: events[event].type,
         });
       }
       this.setState({
-        trips_and_events: newState
-      });
+        trips_and_events: eventsState.filter(event=> event.type === 'event'),
+        homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
+      })
     });
   }
 
   onClick = (dateID) => {
-    this.setState(prevState => ({clicked: prevState.clicked === dateID ? '' : dateID}))
+    this.setState(prevState => ({clicked: prevState.clicked === dateID ? '' : dateID, selectStart: '', selectEnd: '', selecting: false}))
   }
 
   onHover = (dateID) => {
     this.setState({hovered: dateID})
+  }
+
+  onSelectStart = (dateID) => {
+    this.setState({selecting: true, selectStart: dateID, selectEnd: dateID, clicked: ''})
+  }
+
+  onSelectEnd = (dateID) => {
+    this.setState({selectEnd: dateID, selecting: false})
+  }
+
+  selectTimeout = null
+
+  onSelectDrag = (dateID) => {
+    if (! this.state.selecting) return
+    if (this.selectTimeout) clearTimeout(this.selectTimeout)
+    const selectTimeout = setTimeout(this.setState({selectEnd: dateID}), 250)
+  }
+
+  unsetSelect = () => {
+    this.setState({clicked: '', selectStart: '', selectEnd: '', selecting: false})
   }
 
   handleBirthDateFormOpen = () => {
@@ -116,7 +142,7 @@ class App extends Component {
   
 
   render() {
-    const { birthEpoch, birthYear, birthDate, trips_and_events, hovered, clicked, birthDateFormOpen, datePickerEditMode } = this.state
+    const { birthEpoch, birthYear, birthDate, trips_and_events, homes, hovered, clicked, birthDateFormOpen, datePickerEditMode, selectStart, selectEnd, selecting } = this.state
     const birthDay = new Date(parseInt(birthEpoch))
     const svgWidth = 1000
     const margin = { top: 50, right: 50, bottom: 50, left: 50 }
@@ -125,7 +151,7 @@ class App extends Component {
     const squaresPerRow = 52
     const squareSize = (svgWidth - (margin.left + margin.right) - (paddingMinorHorizontal * 3) - (squareMargin * squaresPerRow)) / squaresPerRow
     const rowHeight = squareSize + squareMargin
-    const rows = 70
+    const rows = 91
     const daysPerSquare = Math.floor(365/squaresPerRow)
 
     const dates = range(squaresPerRow * rows).map((n, i)=> {
@@ -141,11 +167,14 @@ class App extends Component {
       return { ...obj, id: `${obj.row}-${obj.column}`}
     })
 
-    const selectedDate = dates.filter(date => date.id === clicked)[0] || {}
+    const selectedDate = dates.find(date => date.id === (clicked || selectStart)) || {}
+    const selectedEndDate = dates.find(date => date.id === selectEnd) || {}
     const selectedEvents = trips_and_events.filter(event => event.startDate >= new Date(selectedDate.startDate) && event.startDate <= new Date(selectedDate.endDate)) || []
     const weekNewYear = (52 - getWeekNumber(birthDate)[1]) % 52
 
     console.log(getWeekNumber(birthDate)[1], weekNewYear)
+
+    return <LifeGridScreen/>
 
     return (
       <div className="App mh3 mv4" style={{ minWidth: "950px" }} >
@@ -170,14 +199,17 @@ class App extends Component {
           </h2>
           <p>To change it, click the <span role="img" aria-label="birthday cake" onClick={ this.handleBirthDateFormOpen }>🎂</span>icon in the grid below.</p>
           <p>Weeks are aligned to your birth date rather than the typical start day (Sun or Mon). This way, the first block in each row is your birthday! <span role="img" aria-label="party">🎉</span></p>
-          <p>This is my take on the post <a href="https://waitbutwhy.com/2014/05/life-weeks.html">Your Life in Weeks</a> by Tim Urban of Wait But Why. Thanks, Tim, for this hugely influential concept (though most people I share it with find it at least a bit macabre).</p>
+          <p>This is my take on the post <a href="https://waitbutwhy.com/2014/05/life-weeks.html" target="_blank">Your Life in Weeks</a> by Tim Urban of Wait But Why. Thanks, Tim, for this hugely influential concept (though most people I share it with find it at least a bit macabre).</p>
         </div>
         <div className="Main">
           <EventsScreen events={trips_and_events} />
-          <div className="fixed top-5 right-1 shadow-2 ba bg-white-70">
+          <div className="fixed bottom-1 right-1 shadow-2 ba bg-white-70">
             <EventForm 
               onSubmit={ this.handleNewTripEvent }
-              initialStartDate={ clicked ? selectedDate.startDate : '' }
+              initialStartDate={ (clicked || (!selecting && selectStart)) ? selectedDate.startDate : '' }
+              initialEndDate={ (!selecting && selectEnd) ? selectedEndDate.endDate : '' }
+              rangeMode={ selecting || selectStart }
+              unsetSelect={ this.unsetSelect }
             />
             <hr />
             <div className="pa2">
@@ -190,7 +222,7 @@ class App extends Component {
                       <p>{ `${moment.utc(selectedDate.startDate).format("MM/DD")}-${moment.utc(selectedDate.endDate).format("MM/DD/YY")}` }</p>
                     <ul>
                       {
-                        selectedEvents.map((event, i) => <li key={i} className="list">{ `${event.name} ${event.emoji}` }</li>)
+                        selectedEvents.map((event, i) => <li key={i} className="list">{ `${event.emoji} ${event.name}` }</li>)
                       }
                     </ul>
                     </div>
@@ -205,38 +237,50 @@ class App extends Component {
             className="center"
           >
           <g transform={`translate(${margin.left},${margin.top})`}>
-          <text 
-            fontSize="2rem"
-            textAnchor="end" alignmentBaseline="baseline" 
-            fontVariant="small-caps"
-            onClick={ this.handleBirthDateFormOpen }
-          >
-              🎂
-          </text>
-          <text fontSize="0.8rem"
-                transform={`translate(${weekNewYear * (squareSize + squareMargin) + (squareSize * 0.5)}, -10)`}
-                fontVariant="small-caps">
-              January 1
-          </text>
-          <text fontSize="0.8rem"
-                transform={`translate(${(weekNewYear + 26)%52 * (squareSize + squareMargin) + (squareSize * 0.5)}, -10)`}
-                fontVariant="small-caps">
+            <text 
+              fontSize="2rem"
+              textAnchor="end" alignmentBaseline="baseline" 
+              fontVariant="small-caps"
+              className="unselectable"
+              onClick={ this.handleBirthDateFormOpen }
+            >
+                🎂
+            </text>
+            <text fontSize="0.8rem"
+                  transform={`translate(${weekNewYear * (squareSize + squareMargin) + (squareSize * 0.5)}, -10)`}
+                  fontVariant="small-caps"
+                  className="unselectable"
+            >
+                January 1
+            </text>
+            <text fontSize="0.8rem"
+                  transform={`translate(${(weekNewYear + 26)%52 * (squareSize + squareMargin) + (squareSize * 0.5)}, -10)`}
+                  fontVariant="small-caps"
+                  className="unselectable"
+            >
 
-              July 1
-          </text>
-          {
-            <LifeGrid 
-              dates={ dates }
-              events={ trips_and_events }
-              config={ {squareSize, squareMargin, weekNewYear, paddingMinorHorizontal, rowHeight} }
-              onClick={ this.onClick }
-              onHover={ this.onHover }
-              clicked={ clicked }
-              hovered={ hovered }
-              birthDate={ birthDate }
-            /> 
-          } 
-          </g>
+                July 1
+            </text>
+            {
+              <LifeGrid 
+                dates={ dates }
+                events={ trips_and_events }
+                homes={ homes }
+                config={ {squareSize, squareMargin, weekNewYear, paddingMinorHorizontal, rowHeight} }
+                onClick={ this.onClick }
+                onHover={ this.onHover }
+                onSelectStart={ this.onSelectStart }
+                onSelectEnd={ this.onSelectEnd }
+                onSelectDrag={ this.onSelectDrag }
+                clicked={ clicked }
+                hovered={ hovered }
+                birthDate={ birthDate }
+                selectStart={ selectStart }
+                selectEnd={ selectEnd }
+                selecting={ selecting }
+              /> 
+            } 
+            </g>
           </svg>
         </div>
       </div>

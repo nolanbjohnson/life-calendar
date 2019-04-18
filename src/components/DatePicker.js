@@ -3,6 +3,7 @@ import moment from 'moment'
 
 const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openForm, inline }) => {
 	const [date, setDate] = useState(initialDate)
+	const [hovered, setHovered] = useState(false)
 
 	useEffect(() => {
 		setDate(initialDate)
@@ -45,7 +46,7 @@ const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openFo
 				</button>
 		  	</form>
 		  )
-		: <span onClick={ openForm }>{ moment.utc(date).format(format) }</span>
+		: <span onClick={ openForm } onMouseOver={() => setHovered(true) } onMouseOut={() => setHovered(false) } style={{ color: hovered ? "steelblue" : "inherit", cursor: "pointer" }}>{ moment.utc(date).format(format) }</span>
 
 	)
 }

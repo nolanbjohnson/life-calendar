@@ -1,16 +1,17 @@
 import React, { memo } from 'react'
 import moment from 'moment'
-import { colorSwitch } from '../helpers/utils'
+import { colorSwitch, backgroundColorRandom } from '../helpers/utils'
 
-const GridSquare = ({ squareSize, date, yourAge, clicked, highlighted, date_events }) => {
-
+const GridSquare = ({ squareSize, date, yourAge, clicked, highlighted, date_events, date_homes, selectEndPoint }) => {
+	const futureSquare = new Date(date.startDate) > new Date()
 	return (
 		<rect width={squareSize} 
 	          height={squareSize}
 	          className="date"
 	          rx={2}
 	          ry={2}
-	          style={{fill: clicked ? 'black' : colorSwitch(date.column, date.row, yourAge, 0.5), strokeWidth: highlighted ? "2" : "1", stroke: "rgba(150,150,150)"}}
+	          //style={{fill: (clicked || selectEndPoint) ? 'black' : colorSwitch(date.column, date.row, yourAge, 0.5), strokeWidth: highlighted ? "2" : "1", stroke: "rgba(150,150,150,1)"}}
+	          style={{fill: (clicked || selectEndPoint) ? 'black' : ( futureSquare ?  'white' : date_homes.color || 'white' ), strokeWidth: highlighted ? "2" : "1", stroke: "rgba(150,150,150,1)"}}
 	    >
 			<title style={{fontSize: "3em"}}
 			>

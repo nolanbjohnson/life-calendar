@@ -4,17 +4,22 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } from './FormElements'
 
-const EventForm = ({ onSubmit, initialStartDate }) => {
+const EventForm = ({ onSubmit, initialStartDate, initialEndDate, rangeMode, unsetSelect }) => {
 	const [name, setName] = useState('')
 	const [emoji, setEmoji] = useState('')
 	const [startDate, setStartDate] = useState('')
+	const [endDate, setEndDate] = useState('')
+	const [eventType, setEventType] = useState('event')
 	const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 
 	useEffect(() => {
 		setStartDate(initialStartDate)
-	}, [initialStartDate])
+		setEndDate(initialEndDate)
+	}, [initialStartDate, initialEndDate])
 
-	console.log(initialStartDate)
+	useEffect(() => {
+		setEventType(rangeMode ? 'home' : 'event')
+	}, [rangeMode])
 
 	const resetForm = () => {
 		setName('')
@@ -35,19 +40,56 @@ const EventForm = ({ onSubmit, initialStartDate }) => {
 	return (
 		<Form onSubmit={ handleSubmit } style={{ overflow: "auto" }}>
 			<FormSection>
-				<FormLabel htmlFor="startDate"><span role="img" aria-label="today" onClick={ () => setStartDate(moment().format("YYYY-MM-DD")) }>📅</span> Date</FormLabel>
+				<FormLabel 
+					htmlFor="startDate"
+				>
+					<span 
+						role="img" 
+						aria-label="Set Start to Today" 
+						onClick={ () => setStartDate(moment().format("YYYY-MM-DD"))}
+					>
+						📅
+					</span>
+					{ `${ rangeMode ? "Start " : "" }Date` }
+				</FormLabel>
 				<FormInput 
 					name="startDate" 
 					type="date" 
 					value={startDate}
 					onChange={e => setStartDate(e.target.value)}
 				/>
+				{
+					rangeMode
+					? (
+						<React.Fragment>
+						<FormLabel 
+							htmlFor="endDate"
+						>
+							<span 
+								role="img" 
+								aria-label="Set End to Today" 
+								onClick={ () => setEndDate(moment().format("YYYY-MM-DD"))}
+							>
+								📅
+							</span>
+							End Date
+						</FormLabel>
+						<FormInput 
+							name="endDate" 
+							type="date" 
+							value={endDate}
+							onChange={e => setEndDate(e.target.value)}
+						/>
+						</React.Fragment>
+					  )
+					: null
+				}
 				<FormLabel htmlFor="name">Event Name / Description</FormLabel>
 				<FormTextArea 
 					name="name" 
 					type="text" 
 					value={name} 
-					onChange={e => setName(e.target.value)} 
+					onChange={e => setName(e.target.value)}
 				/>
 				<FormLabel htmlFor="emoji">Emoji <span className="normal black-60">(optional)</span></FormLabel>
 				
@@ -59,11 +101,12 @@ const EventForm = ({ onSubmit, initialStartDate }) => {
 						name="emoji" 
 						type="text" 
 						value={emoji} 
-						onFocus={() => setShowEmojiPicker(true) }
+						// onFocus={() => setShowEmojiPicker(true) }
 						onChange={e => setEmoji(e.target.value)} 
 						/>
 					  )
 				}
+				<input name="type" type="text" value={eventType} readOnly style={{display: "none"}}/>
 			</FormSection>
 			<FormSubmit 
 				type="submit" 
