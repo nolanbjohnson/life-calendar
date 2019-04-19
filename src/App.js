@@ -4,7 +4,6 @@ import { range } from 'd3-array'
 import firebase from './firebase'
 import { getWeekNumber } from './helpers/utils'
 import EventsScreen from './screens/EventsScreen'
-import LifeGridScreen from './screens/LifeGridScreen'
 import Svg from './components/Svg'
 import EventForm from './components/EventForm'
 import BirthDateForm from './components/BirthDateForm'
@@ -173,8 +172,6 @@ class App extends Component {
     const weekNewYear = (52 - getWeekNumber(birthDate)[1]) % 52
 
     console.log(getWeekNumber(birthDate)[1], weekNewYear)
-
-    return <LifeGridScreen/>
 
     return (
       <div className="App mh3 mv4" style={{ minWidth: "950px" }} >
