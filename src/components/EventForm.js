@@ -7,6 +7,7 @@ import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } fro
 const EventForm = ({ onSubmit, initialStartDate, initialEndDate, rangeMode, unsetSelect }) => {
 	const [name, setName] = useState('')
 	const [emoji, setEmoji] = useState('')
+	const [hidden, setHidden] = useState(false)
 	const [startDate, setStartDate] = useState('')
 	const [endDate, setEndDate] = useState('')
 	const [eventType, setEventType] = useState('event')
@@ -106,6 +107,15 @@ const EventForm = ({ onSubmit, initialStartDate, initialEndDate, rangeMode, unse
 						/>
 					  )
 				}
+				<FormLabel htmlFor="hidden">
+					<input 
+						name="hidden" 
+						type="checkbox"
+						checked={hidden} 
+						onChange={e => setHidden(e.target.checked)}
+					/>
+					<span> Hidden</span>
+				</FormLabel>
 				<input name="type" type="text" value={eventType} readOnly style={{display: "none"}}/>
 			</FormSection>
 			<FormSubmit 

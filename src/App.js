@@ -31,6 +31,7 @@ class App extends Component {
     //   {startDate: new Date('2011-02-05'), endDate: new Date('2011-02-11'), name: 'Moved to Madison, WI', emoji: '🧀'},
     // ],
     trips_and_events: [],
+    hidden_events: [],
     homes: [], // {startDate: new Date('1985-11-03'), endDate: new Date('1991-05-01'), name: 'Canada', location: {lat: 52.136172, lon: -106.729138}}
     hovered: '',
     clicked: '',
@@ -52,11 +53,13 @@ class App extends Component {
           name: events[event].name,
           emoji: events[event].emoji,
           type: events[event].type,
+          hidden: events[event].hidden ? true : false
         });
       }
       this.setState({
-        trips_and_events: eventsState.filter(event=> event.type === 'event'),
+        trips_and_events: eventsState.filter(event=> event.type === 'event' && !event.hidden),
         homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
+        hidden_events: eventsState.filter(event=> event.type === 'event' && event.hidden)
       })
     });
   }
