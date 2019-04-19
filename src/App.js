@@ -14,9 +14,8 @@ import './App.css';
 
 //scaffolding
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import Nav from './Nav'
+import Navigation from './Navigation'
 import LifeGridScreen from './screens/LifeGridScreen'
-import lifegrid from './assets/lifegridcoarse.png'
 
 
 class App extends Component {
@@ -150,9 +149,8 @@ class App extends Component {
 
     return (
       <Router>
-        <header style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>
-          <Link to="/"><img src={lifegrid} alt="lifegrid" style={{height:"70px", margin: "1rem"}} /></Link>
-          <Nav />
+        <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
+          <Navigation />
         </header>
         <Switch>
           <Route path="/" exact component={LifeGridScreen}/>
