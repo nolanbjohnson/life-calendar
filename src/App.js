@@ -16,6 +16,8 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import Navigation from './Navigation'
 import LifeGridScreen from './screens/LifeGridScreen'
+import LifeEventsScreen from './screens/LifeEventsScreen'
+import * as ROUTES from './helpers/routes'
 
 
 class App extends Component {
@@ -149,17 +151,26 @@ class App extends Component {
 
     return (
       <Router>
-        <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
-          <Navigation />
-        </header>
-        <Switch>
-          <Route path="/" exact component={LifeGridScreen}/>
-          <Route path="/events" exact render={() => <h2 style={{padding: "100px"}}>events</h2>}/>
-          <Route path="/stages" exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
-          <Route path="/explore" exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
-          <Route path="/impossibleyou" exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
-          <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
-        </Switch>
+        <div className="min-vh-100">
+          <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
+            <Navigation />
+          </header>
+          <div style={{flex: "1 1 0%"}}>
+            <Switch>
+              <Route path={ROUTES.LANDING} exact component={LifeGridScreen}/>
+              <Route path={ROUTES.EVENTS} exact component={LifeEventsScreen}/>
+              <Route path={ROUTES.STAGES} exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
+              <Route path={ROUTES.EXPLORE} exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
+              <Route path={ROUTES.IMPOSSIBLE} exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+              <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
+            </Switch>
+          </div>
+          <footer>
+            <div class="w-100 mw8 ph3 center pt4 pb4">
+              <p>© Some footer text</p>
+            </div>
+          </footer>
+        </div>
       </Router>
 
     )
