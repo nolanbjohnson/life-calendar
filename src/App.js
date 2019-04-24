@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment'
 import { range } from 'd3-array'
-import firebase from './firebase'
+import Firebase from './firebase'
 import { getWeekNumber } from './helpers/utils'
 import EventsScreen from './screens/EventsScreen'
 import Svg from './components/Svg'
@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import Navigation from './Navigation'
 import LifeGridScreen from './screens/LifeGridScreen'
 import LifeEventsScreen from './screens/LifeEventsScreen'
+import SignUp from './components/SignUp'
 import * as ROUTES from './helpers/routes'
 
 
@@ -47,25 +48,25 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const eventsRef = firebase.database().ref('events');
-    eventsRef.on('value', snapshot => {
-      let events = snapshot.val();
-      let eventsState = [];
-      for (let event in events) {
-        eventsState.push({
-          id: event,
-          startDate: new Date(events[event].startDate),
-          endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
-          name: events[event].name,
-          emoji: events[event].emoji,
-          type: events[event].type,
-        });
-      }
-      this.setState({
-        trips_and_events: eventsState.filter(event=> event.type === 'event'),
-        homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
-      })
-    });
+    // const eventsRef = Firebase.events()
+    // eventsRef.on('value', snapshot => {
+    //   let events = snapshot.val();
+    //   let eventsState = [];
+    //   for (let event in events) {
+    //     eventsState.push({
+    //       id: event,
+    //       startDate: new Date(events[event].startDate),
+    //       endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
+    //       name: events[event].name,
+    //       emoji: events[event].emoji,
+    //       type: events[event].type,
+    //     });
+    //   }
+    //   this.setState({
+    //     trips_and_events: eventsState.filter(event=> event.type === 'event'),
+    //     homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
+    //   })
+    // });
   }
 
   onClick = (dateID) => {
@@ -105,28 +106,28 @@ class App extends Component {
   }
 
   handleNewTripEvent = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
 
-    const eventsRef = firebase.database().ref('events') // set ref to firebase db
+    // const eventsRef = Firebase.events() // set ref to firebase db
 
-    const form = e.target
-    const data = new FormData(form)
-    let event = {}
+    // const form = e.target
+    // const data = new FormData(form)
+    // let event = {}
 
-    for(let input of data.entries()) {
-      event[input[0]] = input[0] === "startDate" ? moment.utc(input[1]).format("YYYY-MM-DD") : input[1]
-    }
+    // for(let input of data.entries()) {
+    //   event[input[0]] = input[0] === "startDate" ? moment.utc(input[1]).format("YYYY-MM-DD") : input[1]
+    // }
 
-    if(! event.startDate instanceof Date) return
-    if(event.name==="") return
+    // if(! event.startDate instanceof Date) return
+    // if(event.name==="") return
 
-    eventsRef.push(event) // send event to firebase db
+    // eventsRef.push(event) // send event to firebase db
 
-    console.log(event)
+    // console.log(event)
     
-    // this.setState(prevState => (
-    //   { trips_and_events: [ ...prevState.trips_and_events,  event] }
-    // ))
+    // // this.setState(prevState => (
+    // //   { trips_and_events: [ ...prevState.trips_and_events,  event] }
+    // // ))
   }
 
   handleBirthDate = (e) => {
@@ -157,11 +158,12 @@ class App extends Component {
           </header>
           <div style={{flex: "1 1 0%"}}>
             <Switch>
-              <Route path={ROUTES.LANDING} exact component={LifeGridScreen}/>
-              <Route path={ROUTES.EVENTS} exact component={LifeEventsScreen}/>
-              <Route path={ROUTES.STAGES} exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
-              <Route path={ROUTES.EXPLORE} exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
-              <Route path={ROUTES.IMPOSSIBLE} exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+              <Route path={ ROUTES.LANDING } exact component={ LifeGridScreen }/>
+              <Route path={ ROUTES.EVENTS } exact component={ LifeEventsScreen }/>
+              <Route path={ ROUTES.STAGES } exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
+              <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
+              <Route path={ ROUTES.IMPOSSIBLE } exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+              <Route path={ ROUTES.SIGNUP } exact component={ SignUp }/>
               <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
             </Switch>
           </div>
