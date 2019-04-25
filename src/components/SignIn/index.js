@@ -37,7 +37,6 @@ const SignInFormBase = (props) => {
       .catch(error => {
         setError(error);
       });
-
     event.preventDefault();
   };
 

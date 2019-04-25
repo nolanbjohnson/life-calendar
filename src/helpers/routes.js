@@ -1,6 +1,7 @@
 
 export const LANDING = '/'
 export const HOME = '/'
+export const ONBOARDING = '/onboarding'
 export const EVENTS = '/events'
 export const STAGES = '/stages'
 export const EXPLORE = '/explore'
