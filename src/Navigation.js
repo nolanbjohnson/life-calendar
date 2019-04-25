@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import lifegrid from './assets/lifegridcoarse.png'
+
+import SignOut from './components/SignOut'
 import { backgroundColorRandom } from './helpers/utils'
 import * as ROUTES from './helpers/routes'
+
+import lifegrid from './assets/lifegridcoarse.png'
 import Logo from './assets/Logo'
 
 const Navigation = (props) => {
@@ -46,6 +49,9 @@ const Navigation = (props) => {
 					<NavLink to={ROUTES.SIGNIN}>
 						Sign In
 					</NavLink>
+				</NavItem>
+				<NavItem>
+					<SignOut />
 				</NavItem>
 			</UserNavigation>
 		</Nav>
