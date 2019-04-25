@@ -41,7 +41,14 @@ const SignUpFormBase = (props) => {
     props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
+        props.firebase
+          .user(authUser.user.uid)
+          .set({
+            username,
+            email
+          })
         console.log(authUser)
+
         resetForm()
         props.history.push(ROUTES.ONBOARDING)
       })

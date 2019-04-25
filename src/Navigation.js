@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { AuthUserContext } from './components/Session'
+import { withFirebase } from './components/Firebase'
 import SignOut from './components/SignOut'
 import { backgroundColorRandom } from './helpers/utils'
 import * as ROUTES from './helpers/routes'
@@ -11,6 +12,8 @@ import lifegrid from './assets/lifegridcoarse.png'
 import Logo from './assets/Logo'
 
 const Navigation = (props) => {
+	const [userName, setUserName] = useState('')
+
 	return (
 		<Nav> {/*style={{ display: "flex", alignContent: "center", justifyContent: "center", width: "100%"}}> */}
 			{ /* <Link to="/"><img src={lifegrid} alt="lifegrid" style={{height:"40px", margin: "1rem"}} /></Link> */}
@@ -50,6 +53,7 @@ const Navigation = (props) => {
 					{ authUser => (
 						authUser
 						? <NavItem>
+							<small>{ authUser.email }</small>
 							<SignOut />
 						  </NavItem>
 
@@ -85,5 +89,5 @@ const NavLink = styled(Link).attrs(({ primary, tight }) => ({
 	className: `nowrap tc no-underline hover-dark-blue ${tight ? "mr1 pa1" : "mr3 pa2"} ${primary ? "black f3 fw8" : "blue f6 fw6"}`
 }))``
 
-export default Navigation
+export default withFirebase(Navigation)
 

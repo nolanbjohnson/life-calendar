@@ -1,6 +1,6 @@
 import app from 'firebase/app'
 import 'firebase/auth'
-import 'firebase/database';
+import 'firebase/database'
 
 // following this tutorial for firebase: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/
 
@@ -18,7 +18,7 @@ class Firebase {
     app.initializeApp(config)
 
     this.auth = app.auth()
-    this.db = app.database();
+    this.db = app.database()
   }
 
   doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password)
@@ -34,8 +34,12 @@ class Firebase {
 
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password)
 
-  events = () => this.db.ref('events')
 
+  user = uid => this.db.ref(`users/${uid}`)
+
+  users = () => this.db.ref('users')
+
+  events = () => this.db.ref('events')
 }
 
 export default Firebase

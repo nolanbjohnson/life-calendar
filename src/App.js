@@ -79,7 +79,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this.listener()
+    this.props.firebase.events().off()
   }
 
   onClick = (dateID) => {
