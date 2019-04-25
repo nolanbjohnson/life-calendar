@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment'
 import { range } from 'd3-array'
-import Firebase from './firebase'
+
+import { withFirebase } from './components/Firebase'
 import { getWeekNumber } from './helpers/utils'
 import EventsScreen from './screens/EventsScreen'
 import Svg from './components/Svg'
@@ -49,25 +50,25 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // const eventsRef = Firebase.events()
-    // eventsRef.on('value', snapshot => {
-    //   let events = snapshot.val();
-    //   let eventsState = [];
-    //   for (let event in events) {
-    //     eventsState.push({
-    //       id: event,
-    //       startDate: new Date(events[event].startDate),
-    //       endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
-    //       name: events[event].name,
-    //       emoji: events[event].emoji,
-    //       type: events[event].type,
-    //     });
-    //   }
-    //   this.setState({
-    //     trips_and_events: eventsState.filter(event=> event.type === 'event'),
-    //     homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
-    //   })
-    // });
+    const eventsRef = this.props.firebase.events()
+    eventsRef.on('value', snapshot => {
+      let events = snapshot.val();
+      let eventsState = [];
+      for (let event in events) {
+        eventsState.push({
+          id: event,
+          startDate: new Date(events[event].startDate),
+          endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
+          name: events[event].name,
+          emoji: events[event].emoji,
+          type: events[event].type,
+        });
+      }
+      this.setState({
+        trips_and_events: eventsState.filter(event=> event.type === 'event'),
+        homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
+      })
+    });
   }
 
   onClick = (dateID) => {
@@ -107,28 +108,28 @@ class App extends Component {
   }
 
   handleNewTripEvent = (e) => {
-    // e.preventDefault()
+    e.preventDefault()
 
-    // const eventsRef = Firebase.events() // set ref to firebase db
+    const eventsRef = this.props.firebase.events() // set ref to firebase db
 
-    // const form = e.target
-    // const data = new FormData(form)
-    // let event = {}
+    const form = e.target
+    const data = new FormData(form)
+    let event = {}
 
-    // for(let input of data.entries()) {
-    //   event[input[0]] = input[0] === "startDate" ? moment.utc(input[1]).format("YYYY-MM-DD") : input[1]
-    // }
+    for(let input of data.entries()) {
+      event[input[0]] = input[0] === "startDate" ? moment.utc(input[1]).format("YYYY-MM-DD") : input[1]
+    }
 
-    // if(! event.startDate instanceof Date) return
-    // if(event.name==="") return
+    if(! event.startDate instanceof Date) return
+    if(event.name==="") return
 
-    // eventsRef.push(event) // send event to firebase db
+    eventsRef.push(event) // send event to firebase db
 
-    // console.log(event)
+    console.log(event)
     
-    // // this.setState(prevState => (
-    // //   { trips_and_events: [ ...prevState.trips_and_events,  event] }
-    // // ))
+    // this.setState(prevState => (
+    //   { trips_and_events: [ ...prevState.trips_and_events,  event] }
+    // ))
   }
 
   handleBirthDate = (e) => {
@@ -327,4 +328,4 @@ class App extends Component {
 
 
 
-export default App;
+export default withFirebase(App);
