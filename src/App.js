@@ -18,6 +18,7 @@ import Navigation from './Navigation'
 import LifeGridScreen from './screens/LifeGridScreen'
 import LifeEventsScreen from './screens/LifeEventsScreen'
 import SignUp from './components/SignUp'
+import SignIn from './components/SignIn'
 import * as ROUTES from './helpers/routes'
 
 
@@ -164,6 +165,7 @@ class App extends Component {
               <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
               <Route path={ ROUTES.IMPOSSIBLE } exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
               <Route path={ ROUTES.SIGNUP } exact component={ SignUp }/>
+              <Route path={ ROUTES.SIGNIN } exact component={ SignIn }/>
               <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
             </Switch>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose'
 
@@ -11,7 +11,7 @@ import * as ROUTES from '../../helpers/routes';
 // implementing with Hooks
 
 const SignUpPage = () => (
-  <div>
+  <div className="w-100 mw8 ph3 center">
     <h2>SignUp</h2>
       <SignUpForm />
   </div>
@@ -30,7 +30,7 @@ const SignUpFormBase = (props) => {
     setEmail("")
     setPassword("")
     setPasswordConfirmation("")
-    setError("")
+    setError(null)
   }
 
   // TODO try refactoring to use async and await instead (how do you do catch?)
