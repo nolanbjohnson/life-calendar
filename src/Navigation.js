@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { AuthUserContext } from './components/Session'
 import SignOut from './components/SignOut'
 import { backgroundColorRandom } from './helpers/utils'
 import * as ROUTES from './helpers/routes'
@@ -45,14 +46,21 @@ const Navigation = (props) => {
 				</NavItem>
 			</SiteNavigation>
 			<UserNavigation>
-				<NavItem>
-					<NavLink to={ROUTES.SIGNIN}>
-						Sign In
-					</NavLink>
-				</NavItem>
-				<NavItem>
-					<SignOut />
-				</NavItem>
+				<AuthUserContext.Consumer>
+					{ authUser => (
+						authUser
+						? <NavItem>
+							<SignOut />
+						  </NavItem>
+
+						: <NavItem>
+							<NavLink to={ROUTES.SIGNIN}>
+								Sign In
+							</NavLink>
+						  </NavItem>
+						)
+					}
+				</AuthUserContext.Consumer>
 			</UserNavigation>
 		</Nav>
 	)

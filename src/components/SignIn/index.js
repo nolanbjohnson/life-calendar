@@ -32,7 +32,7 @@ const SignInFormBase = (props) => {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         resetForm()
-        props.history.push(ROUTES.LANDING);
+        props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         setError(error);

@@ -43,7 +43,7 @@ const SignUpFormBase = (props) => {
       .then(authUser => {
         console.log(authUser)
         resetForm()
-        props.history.push(ROUTES.LANDING)
+        props.history.push(ROUTES.HOME)
       })
       .catch(error => {
         console.log(error)
