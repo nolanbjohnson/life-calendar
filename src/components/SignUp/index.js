@@ -6,6 +6,7 @@ import { withFirebase } from '../Firebase';
 import { Form, FormSection, FormLabel, FormInput, FormSubmit } from '../FormElements'
 
 import * as ROUTES from '../../helpers/routes';
+import * as ROLES from '../../helpers/roles';
 
 // following this tutorial for firebase: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/
 // implementing with Hooks
@@ -23,6 +24,7 @@ const SignUpFormBase = (props) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
+  const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState(null)
 
   const resetForm = () => {
@@ -30,6 +32,7 @@ const SignUpFormBase = (props) => {
     setEmail("")
     setPassword("")
     setPasswordConfirmation("")
+    setIsAdmin(false)
     setError(null)
   }
 
@@ -38,6 +41,11 @@ const SignUpFormBase = (props) => {
     if(isInvalid) return // submit should be disabled but check anyway
 
     console.log('submitting form:', event.target)
+
+    let roles = {}
+    if (isAdmin) {
+      roles[ROLES.ADMIN] = ROLES.ADMIN
+    }
     props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
@@ -45,7 +53,8 @@ const SignUpFormBase = (props) => {
           .user(authUser.user.uid)
           .set({
             username,
-            email
+            email,
+            roles
           })
         console.log(authUser)
 
@@ -114,6 +123,17 @@ const SignUpFormBase = (props) => {
           type="password" 
           value={passwordConfirmation}
           onChange={e => setPasswordConfirmation(e.target.value)}
+        />
+        <FormLabel 
+          htmlFor="isAdmin"
+        >
+          Admin Priviledges
+        </FormLabel>
+        <input 
+          name="isAdmin" 
+          type="checkbox" 
+          checked={isAdmin}
+          onChange={e => setIsAdmin(e.target.checked)}
         />
       </FormSection>
       <FormSubmit 

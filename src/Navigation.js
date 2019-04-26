@@ -7,6 +7,7 @@ import { withFirebase } from './components/Firebase'
 import SignOut from './components/SignOut'
 import { backgroundColorRandom } from './helpers/utils'
 import * as ROUTES from './helpers/routes'
+import * as ROLES from './helpers/roles'
 
 import lifegrid from './assets/lifegridcoarse.png'
 import Logo from './assets/Logo'
@@ -53,7 +54,8 @@ const Navigation = (props) => {
 					{ authUser => (
 						authUser
 						? <NavItem>
-							<small>{ authUser.email }</small>
+							{ authUser.roles[ROLES.ADMIN] ? <strong>^</strong> : null}
+							<small>{ authUser.username }</small>
 							<SignOut />
 						  </NavItem>
 

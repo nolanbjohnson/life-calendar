@@ -13,11 +13,15 @@ const withAuthorization = condition => Component => {
 		const [authUser, setAuthUser] = useState(null)
 
 		useEffect(() => {
-			const listener = props.firebase.auth.onAuthStateChanged(authUser => {
-		      if(!condition(authUser)) {
-		      	props.history.push(ROUTES.SIGNIN)
-		      }
-		    })
+			const listener = props.firebase.onAuthUserListener(
+				authUser => {
+			      	if(!condition(authUser)) {
+			      		props.history.push(ROUTES.SIGNIN)
+			      	}
+			    }, 
+			    () => props.history.push(ROUTES.SIGNIN)
+		    )
+		      
 		    return listener
 		}, []) // TODO I don't think the empty array is correct here - but don't know what state/props to include either
 
