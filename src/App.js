@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment'
 import { range } from 'd3-array'
-import firebase from './firebase'
+
+import { withFirebase } from './components/Firebase'
 import { getWeekNumber } from './helpers/utils'
 import EventsScreen from './screens/EventsScreen'
 import Svg from './components/Svg'
@@ -11,6 +12,19 @@ import DatePicker from './components/DatePicker'
 import LifeGrid from './components/LifeGrid'
 import { backgroundColorRandom } from './helpers/utils'
 import './App.css';
+
+//scaffolding
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+
+
+import { withAuthentication } from './components/Session';
+import Navigation from './Navigation'
+import LifeGridScreen from './screens/LifeGridScreen'
+import LifeEventsScreen from './screens/LifeEventsScreen'
+import Onboarding from './screens/OnboardingScreen'
+import SignUp from './components/SignUp'
+import SignIn from './components/SignIn'
+import * as ROUTES from './helpers/routes'
 
 
 class App extends Component {
@@ -38,10 +52,13 @@ class App extends Component {
     selectStart: '',
     selectEnd: '',
     selecting: false,
+
+
+    authUser: null,
   }
 
   componentDidMount() {
-    const eventsRef = firebase.database().ref('events');
+    const eventsRef = this.props.firebase.events()
     eventsRef.on('value', snapshot => {
       let events = snapshot.val();
       let eventsState = [];
@@ -62,6 +79,10 @@ class App extends Component {
         hidden_events: eventsState.filter(event=> event.type === 'event' && event.hidden)
       })
     });
+  }
+
+  componentWillUnmount() {
+    this.props.firebase.events().off()
   }
 
   onClick = (dateID) => {
@@ -103,7 +124,7 @@ class App extends Component {
   handleNewTripEvent = (e) => {
     e.preventDefault()
 
-    const eventsRef = firebase.database().ref('events') // set ref to firebase db
+    const eventsRef = this.props.firebase.events() // set ref to firebase db
 
     const form = e.target
     const data = new FormData(form)
@@ -144,6 +165,38 @@ class App extends Component {
   
 
   render() {
+
+    return (
+      <Router>
+        <div className="min-vh-100">
+          <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
+            <Navigation/>
+          </header>
+          <div style={{flex: "1 1 0%"}}>
+            <Switch>
+              <Route path={ ROUTES.LANDING } exact component={ LifeGridScreen }/>
+              <Route path={ ROUTES.HOME } exact component={ LifeGridScreen }/>
+              <Route path={ ROUTES.ONBOARDING } exact component={ Onboarding }/>
+              <Route path={ ROUTES.EVENTS } exact component={ LifeEventsScreen }/>
+              <Route path={ ROUTES.STAGES } exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
+              <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
+              <Route path={ ROUTES.IMPOSSIBLE } exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+              <Route path={ ROUTES.SIGNUP } exact component={ SignUp }/>
+              <Route path={ ROUTES.SIGNIN } exact component={ SignIn }/>
+              <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
+            </Switch>
+          </div>
+          <footer>
+            <div class="w-100 mw8 ph3 center pt4 pb4">
+              <p>© Some footer text</p>
+            </div>
+          </footer>
+        </div>
+      </Router>
+    )
+
+
+
     const { birthEpoch, birthYear, birthDate, trips_and_events, homes, hovered, clicked, birthDateFormOpen, datePickerEditMode, selectStart, selectEnd, selecting } = this.state
     const birthDay = new Date(parseInt(birthEpoch))
     const svgWidth = 1000
@@ -290,4 +343,4 @@ class App extends Component {
 
 
 
-export default App;
+export default withAuthentication(App);
