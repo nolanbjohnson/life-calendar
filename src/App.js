@@ -73,6 +73,7 @@ class App extends Component {
           hidden: events[event].hidden ? true : false
         });
       }
+      
       this.setState({
         trips_and_events: eventsState.filter(event=> event.type === 'event' && !event.hidden),
         homes: eventsState.filter(event=> event.type === 'home').map(home => ({ ...home, color: backgroundColorRandom() })),
@@ -166,34 +167,34 @@ class App extends Component {
 
   render() {
 
-    return (
-      <Router>
-        <div className="min-vh-100">
-          <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
-            <Navigation/>
-          </header>
-          <div style={{flex: "1 1 0%"}}>
-            <Switch>
-              <Route path={ ROUTES.LANDING } exact component={ LifeGridScreen }/>
-              <Route path={ ROUTES.HOME } exact component={ LifeGridScreen }/>
-              <Route path={ ROUTES.ONBOARDING } exact component={ Onboarding }/>
-              <Route path={ ROUTES.EVENTS } exact component={ LifeEventsScreen }/>
-              <Route path={ ROUTES.STAGES } exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
-              <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
-              <Route path={ ROUTES.IMPOSSIBLE } exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
-              <Route path={ ROUTES.SIGNUP } exact component={ SignUp }/>
-              <Route path={ ROUTES.SIGNIN } exact component={ SignIn }/>
-              <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
-            </Switch>
-          </div>
-          <footer>
-            <div class="w-100 mw8 ph3 center pt4 pb4">
-              <p>© Some footer text</p>
-            </div>
-          </footer>
-        </div>
-      </Router>
-    )
+    // return (
+    //   <Router>
+    //     <div className="min-vh-100">
+    //       <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
+    //         <Navigation/>
+    //       </header>
+    //       <div style={{flex: "1 1 0%"}}>
+    //         <Switch>
+    //           <Route path={ ROUTES.LANDING } exact component={ LifeGridScreen }/>
+    //           <Route path={ ROUTES.HOME } exact component={ LifeGridScreen }/>
+    //           <Route path={ ROUTES.ONBOARDING } exact component={ Onboarding }/>
+    //           <Route path={ ROUTES.EVENTS } exact component={ LifeEventsScreen }/>
+    //           <Route path={ ROUTES.STAGES } exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
+    //           <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
+    //           <Route path={ ROUTES.IMPOSSIBLE } exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+    //           <Route path={ ROUTES.SIGNUP } exact component={ SignUp }/>
+    //           <Route path={ ROUTES.SIGNIN } exact component={ SignIn }/>
+    //           <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
+    //         </Switch>
+    //       </div>
+    //       <footer>
+    //         <div class="w-100 mw8 ph3 center pt4 pb4">
+    //           <p>© Some footer text</p>
+    //         </div>
+    //       </footer>
+    //     </div>
+    //   </Router>
+    // )
 
 
 

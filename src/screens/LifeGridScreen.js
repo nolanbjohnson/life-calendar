@@ -1,5 +1,10 @@
 import React from 'react'
+
+import { AuthUserContext } from '../components/Session'
 import Placeholder from '../components/Placeholder'
+import LifeCalendar from '../components/LifeCalendar'
+import EventList from '../components/EventList'
+import EventForm from '../components/EventForm'
 
 
 const events = { 
@@ -14,32 +19,46 @@ const events = {
 
 const LifeGridScreen = (props) => (
 	<div className="w-100 mw8 ph3 center">
-	    <Placeholder title="Intro">
-	    	<h2>Life Calendar</h2>
-	    	<p>Some introductory text</p>
-	    	<p>
-	    		This is my take on the post <a href="https://waitbutwhy.com/2014/05/life-weeks.html" target="_blank">Your Life in Weeks</a> by
-	    		 Tim Urban of Wait But Why. Along with many other fantastic blog posts from WbW, this has had a profound influence on
-	    		 how I think about my life and how I spend it. Though, admittedly, most people I share it with find it a bit macabre.
-	    	</p>
-	    </Placeholder>
-	    <Placeholder title="Container">
-    		<div style={{ display: "grid", gridTemplateColumns: "3fr 1fr"}}>
-		    	<Placeholder title="LifeGrid" props={ events }>
-		    	</Placeholder>
-		    	<Placeholder title="EventForm">
-		    		<form style={{ display: "grid", direction: "column", rowGap: "0.5rem" }}>
-		    			<label htmlFor="name">Name</label>
-		    			<input name="name" type="text"/>
-		    			<label htmlFor="date">Date</label>
-		    			<input name="date" type="date"/>
-		    			<label htmlFor="description">Description</label>
-		    			<textarea name="description">
-		    			</textarea>
-		    		</form>
-		    	</Placeholder>
-	    	</div>
-		</Placeholder>
+	    <AuthUserContext.Consumer>
+			{ authUser => (
+				authUser
+				? 	<div style={{ display: "grid", gridTemplateColumns: "minmax(30%,300px) 1fr 1fr", gridGap: "1rem"}}>
+						<EventList />
+						<LifeCalendar 
+							birthDate={ new Date('1985-11-03') }
+						/>
+				    	<EventForm />
+					</div>
+			    :  	<React.Fragment>
+			    	<Placeholder title="Intro">
+				    	<h2>Life Calendar</h2>
+				    	<p>Some introductory text</p>
+				    	<p>
+				    		This is my take on the post <a href="https://waitbutwhy.com/2014/05/life-weeks.html" target="_blank">Your Life in Weeks</a> by
+				    		 Tim Urban of Wait But Why. Along with many other fantastic blog posts from WbW, this has had a profound influence on
+				    		 how I think about my life and how I spend it. Though, admittedly, most people I share it with find it a bit macabre.
+				    	</p>
+				    </Placeholder>
+			    	<Placeholder title="Container">
+			    		<div style={{ display: "grid", gridTemplateColumns: "3fr 1fr"}}>
+					    	<Placeholder title="LifeGrid" props={ events }>
+					    	</Placeholder>
+					    	<Placeholder title="EventForm">
+					    		<form style={{ display: "grid", direction: "column", rowGap: "0.5rem" }}>
+					    			<label htmlFor="name">Name</label>
+					    			<input name="name" type="text"/>
+					    			<label htmlFor="date">Date</label>
+					    			<input name="date" type="date"/>
+					    			<label htmlFor="description">Description</label>
+					    			<textarea name="description">
+					    			</textarea>
+					    		</form>
+					    	</Placeholder>
+				    	</div>
+					</Placeholder>
+					</React.Fragment>
+				)}
+		</AuthUserContext.Consumer>
 	</div>
 )
 
