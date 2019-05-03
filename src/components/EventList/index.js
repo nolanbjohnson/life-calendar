@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 
 
 import { withFirebase } from '../Firebase'
+import { AuthUserContext } from '../Session'
 
 
 const EventListItem = styled.li.attrs({
@@ -12,12 +13,17 @@ const EventListItem = styled.li.attrs({
 
 
 const EventList = props => {
+
+	const authUser = useContext(AuthUserContext)
+
 	const [events, setEvents] = useState([])
 
 	useEffect(() => {
-		const eventsRef = props.firebase.events()
+		const eventsRef = props.firebase.userEvents(authUser.uid)
+		console.log(eventsRef)
 	    eventsRef.on('value', snapshot => {
 	      let events = snapshot.val();
+	      console.log(events)
 	      let eventsState = [];
 	      for (let event in events) {
 	        eventsState.push({

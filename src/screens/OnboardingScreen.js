@@ -1,6 +1,7 @@
 import React from 'react'
-import Placeholder from '../components/Placeholder'
 
+import Placeholder from '../components/Placeholder'
+import OnboardingForm from '../components/OnboardingForm'
 import { withAuthorization } from '../components/Session'
 
 const Onboarding = (props) => (
@@ -15,12 +16,7 @@ const Onboarding = (props) => (
 	    	</p>
 	    </Placeholder>
     	<Placeholder title="OnboardingForm">
-    		<form style={{ display: "grid", direction: "column", rowGap: "0.5rem" }}>
-    			<label htmlFor="birthdate">Birthdate</label>
-    			<input name="birthdate" type="date"/>
-    			<label htmlFor="name">Name</label>
-    			<input name="name" type="text"/>
-    		</form>
+    		<OnboardingForm />
     	</Placeholder>
 	</div>
 )

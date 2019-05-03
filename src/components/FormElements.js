@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Form = styled.form.attrs({
-  className: "pa4 black-80"
+  className: "pa2 black-80"
 })``
 
 export const FormSection = styled.section.attrs({

@@ -36,9 +36,9 @@ const dateIDBetween = (dateID, startID, endID) => {
 
 }
 
-const LifeGrid = ({ dates, birthDate, config }) => {
+const LifeGrid = ({ dates, birthDate, config, weekNewYear }) => {
 	
-	const { squareSize, squareMargin, weekNewYear, paddingMinorHorizontal } = config
+	const { squareSize, squareMargin, paddingMinorHorizontal } = config
 
 	const rowHeight = squareSize + squareMargin
 
@@ -78,6 +78,7 @@ const LifeGrid = ({ dates, birthDate, config }) => {
 	              	squareSize={ squareSize }
 	              	startDate={ date.startDate }
 	              	endDate={ date.endDate }
+	              	nowBox={ date.current }
 	              > 
 	              </LifeBox>
 	            </g>

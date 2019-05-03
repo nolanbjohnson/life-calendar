@@ -5,7 +5,7 @@ import 'firebase/database'
 // following this tutorial for firebase: https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/
 
 const config = {
-  	apiKey: "AIzaSyDrbrjr4n3NaecU__BkBg8E3MIHxwiKKNM",
+  apiKey: "AIzaSyDrbrjr4n3NaecU__BkBg8E3MIHxwiKKNM",
 	authDomain: "the-life-calendar.firebaseapp.com",
 	databaseURL: "https://the-life-calendar.firebaseio.com",
 	projectId: "the-life-calendar",
@@ -19,6 +19,7 @@ class Firebase {
 
     this.auth = app.auth()
     this.db = app.database()
+    this.serverValue = app.database.ServerValue
   }
 
   doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password)
@@ -38,8 +39,7 @@ class Firebase {
     this.auth.onAuthStateChanged(authUser => {
       if (authUser) {
         this.user(authUser.uid)
-          .once('value')
-          .then(snapshot => {
+          .on('value', snapshot => {
             const dbUser = snapshot.val()
 
             // default empty roles
@@ -68,6 +68,8 @@ class Firebase {
   event = (uid) => this.db.ref(`events/${uid}`)
 
   events = () => this.db.ref('events')
+  
+  userEvents = (userId) => this.db.ref('events').orderByChild('userId').equalTo(userId)
 }
 
 export default Firebase

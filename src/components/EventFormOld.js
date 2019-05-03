@@ -4,7 +4,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } from './FormElements'
 
-const EventForm = ({ onSubmit, initialStartDate, initialEndDate, rangeMode, unsetSelect }) => {
+const EventFormOld = ({ onSubmit, initialStartDate, initialEndDate, rangeMode, unsetSelect }) => {
 	const [name, setName] = useState('')
 	const [emoji, setEmoji] = useState('')
 	const [hidden, setHidden] = useState(false)
@@ -128,4 +128,4 @@ const EventForm = ({ onSubmit, initialStartDate, initialEndDate, rangeMode, unse
 }
 
 
-export default EventForm
+export default EventFormOld

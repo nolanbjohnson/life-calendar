@@ -3,22 +3,22 @@ import React from 'react'
 const SVG = (props) => (
 	<svg role="img" viewBox="0 0 30 30" aria-label="LifeGrid" style={{styleheight: "30px", width: "30px"}}>
 		<g>
-		    <rect x="1.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(100,237,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="8.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(100,237,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="15.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(100,237,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="22.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="1.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="8.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="15.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="22.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(205,92,92,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="1.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(205,92,92,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="8.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(205,92,92,0.6)" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="15.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="22.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="1.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="8.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="15.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" stroke-width="0.5px"></rect>
-		    <rect x="22.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" stroke-width="0.5px"></rect>
+		    <rect x="1.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(100,237,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="8.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(100,237,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="15.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(100,237,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="22.5" y="1.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="1.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="8.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="15.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(50,100,237,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="22.5" y="8.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(205,92,92,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="1.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(205,92,92,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="8.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="rgba(205,92,92,0.6)" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="15.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="22.5" y="15.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="1.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="8.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="15.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" strokeWidth="0.5px"></rect>
+		    <rect x="22.5" y="22.5" rx="1" ry="1" width="5.5" height="5.5" fill="white" stroke="grey" strokeWidth="0.5px"></rect>
 		</g>
 	</svg>
 )

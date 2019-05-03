@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
+import { compose } from 'recompose'
 
-import { SignUpLink } from '../SignUp';
-import { withFirebase } from '../Firebase';
+import { SignUpLink } from '../SignUp'
+import { withFirebase } from '../Firebase'
 import { Form, FormSection, FormLabel, FormInput, FormSubmit } from '../FormElements'
-import * as ROUTES from '../../helpers/routes';
+import * as ROUTES from '../../helpers/routes'
 
 const SignInPage = () => (
   <div className="w-100 mw8 ph3 center">
@@ -13,7 +13,7 @@ const SignInPage = () => (
     <SignInForm />
     <SignUpLink />
   </div>
-);
+)
 
 
 const SignInFormBase = (props) => {
@@ -32,7 +32,7 @@ const SignInFormBase = (props) => {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         resetForm()
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME)
       })
       .catch(error => {
         setError(error);
@@ -82,8 +82,8 @@ const SignInFormBase = (props) => {
 const SignInForm = compose(
   withRouter,
   withFirebase,
-)(SignInFormBase);
+)(SignInFormBase)
 
-export default SignInPage;
+export default SignInPage
 
-export { SignInForm };
+export { SignInForm }

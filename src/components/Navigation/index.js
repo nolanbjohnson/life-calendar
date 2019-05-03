@@ -38,11 +38,11 @@ const Navigation = (props) => {
 			{ /* <Link to="/"><img src={lifegrid} alt="lifegrid" style={{height:"40px", margin: "1rem"}} /></Link> */}
 
 			<SiteNavigation> {/* style={{ display: "flex", flexDirection: "row", justifyContent: "stretch", alignItems: "center", flexWrap: "nowrap", margin: 0, padding: 0, listStyle: "none"}}> */}
-				<NavLink to={ROUTES.LANDING} tight>
+				<NavLink to={ROUTES.LANDING} tight={"true"}>
 					<Logo />
 				</NavLink>
 				<NavItem>
-					<NavLink to={ROUTES.LANDING} primary>
+					<NavLink to={ROUTES.LANDING} primary={"true"}>
 						Life Grid		
 					</NavLink>
 				</NavItem>
