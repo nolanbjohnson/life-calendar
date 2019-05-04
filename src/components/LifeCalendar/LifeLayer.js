@@ -1,10 +1,11 @@
 import React from 'react'
+import { pure } from 'recompose'
 
 // A life layer is a render props that takes a date and provides X and Y positions within the SVG
 
 //.... wait that sounds like d3.domain / d3.range - maybe that's what I should be using....
 
-const LifeLayer = ({ dates, config, children, className }) => {
+const LifeLayerBase = ({ dates, config, children, className }) => {
 
 	const { squareSize, squareMargin, weekNewYear, paddingMinorHorizontal } = config
 
@@ -26,5 +27,9 @@ const LifeLayer = ({ dates, config, children, className }) => {
 
 	)
 }
+
+const LifeLayer = pure(LifeLayerBase)
+
+LifeLayer.whyDidYouRender = true
 
 export default LifeLayer

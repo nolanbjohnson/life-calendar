@@ -7,7 +7,6 @@ const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openFo
 
 	useEffect(() => {
 		setDate(initialDate)
-		console.log(initialDate)
 	}, [initialDate])
 	
 	const handleSubmit = (e) => {

@@ -8,26 +8,28 @@ import LifeLayer from './LifeLayer'
 import { getWeekNumber } from '../../helpers/utils'
 import '../../App.css';
 
-// configuration
-const margin = { top: 50, right: 50, bottom: 50, left: 50 }
-const rows = 91
-const width = 400 - margin.left - margin.right
-const paddingMinorHorizontal = 3
-const squareMargin = 1
-const squaresPerRow = 52
-const squareSize = Math.floor((width - (paddingMinorHorizontal * 3) - (squareMargin * squaresPerRow)) / squaresPerRow)
-const height = rows * (squareSize + squareMargin)
 
-const daysPerSquare = Math.floor(365/squaresPerRow)
 
-const nowDate = moment.utc()
-
-const config = {squareSize, squareMargin, paddingMinorHorizontal}
-
-const LifeCalendar = ({ birthDate, events }) => {
+const LifeCalendar = ({ birthDate, events, highlightEvent }) => {
 
   const [displayLayer, setDisplayLayer] = useState(null)
   const [dates, setDates] = useState([])
+
+  // configuration
+  const margin = { top: 50, right: 50, bottom: 50, left: 50 }
+  const rows = 91
+  const width = 400 - margin.left - margin.right
+  const paddingMinorHorizontal = 3
+  const squareMargin = 1
+  const squaresPerRow = 52
+  const squareSize = Math.floor((width - (paddingMinorHorizontal * 3) - (squareMargin * squaresPerRow)) / squaresPerRow)
+  const height = rows * (squareSize + squareMargin)
+
+  const daysPerSquare = Math.floor(365/squaresPerRow)
+
+  const nowDate = moment.utc()
+
+  const config = {squareSize, squareMargin, paddingMinorHorizontal}
 
   // this would be the place to centralize a useReducer redux style state
 
@@ -39,6 +41,13 @@ const LifeCalendar = ({ birthDate, events }) => {
     const datesArray = range(squaresPerRow * rows).map((n, i)=> {
       const startDate = moment.utc(birthDate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
       const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
+
+      const eventsData = events.filter(event =>
+                                        (
+                                          (moment.utc(event.startDate) <= startDate && moment.utc(event.endDate || nowDate) >= moment.utc(startDate)) ||
+                                          (moment.utc(event.startDate) >= startDate && moment.utc(event.startDate) <= moment.utc(endDate))
+                                        ))
+
       const obj = {
         startDate: startDate.format("YYYY-MM-DD"),
         startDateLocaleFormat: startDate.format("M/DD/YY"),
@@ -48,12 +57,10 @@ const LifeCalendar = ({ birthDate, events }) => {
         column: i % squaresPerRow,
         current: startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
         data: {
-          events: events.filter(event => event.type==='home' && 
-                                        (
-                                          (moment.utc(event.startDate) <= startDate && moment.utc(event.endDate || nowDate) >= moment.utc(startDate)) ||
-                                          (moment.utc(event.startDate) >= startDate && moment.utc(event.startDate) <= moment.utc(endDate))
-                                        ))
-        }
+          events: eventsData.filter(event => event.type === 'event'),
+          homes: eventsData.filter(event => event.type === 'home')
+        },
+        eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
       }
 
       return { 
@@ -75,28 +82,28 @@ const LifeCalendar = ({ birthDate, events }) => {
 		>
 			<g transform={`translate(${margin.left},${margin.top})`}>
         <text 
-          transform={`translate(0,0)`}
+          transform={`translate(0,-10)`}
           onMouseEnter={ () => setDisplayLayer(1)} 
           onMouseOut={ () => setDisplayLayer(null) }
         >
           🐙
         </text>
         <text 
-          transform={`translate(20,0)`}
+          transform={`translate(20,-10)`}
           onMouseEnter={ () => setDisplayLayer(2)} 
           onMouseOut={ () => setDisplayLayer(null) } 
         >
           🐙
         </text>
         <text 
-          transform={`translate(40,0)`}
+          transform={`translate(40,-10)`}
           onMouseEnter={ () => setDisplayLayer(3)} 
           onMouseOut={ () => setDisplayLayer(null) } 
         >
           🐙
         </text>
         <text 
-          transform={`translate(60,0)`}
+          transform={`translate(60,-10)`}
           onMouseEnter={ () => setDisplayLayer(4)} 
           onMouseOut={ () => setDisplayLayer(null) } 
         >
@@ -183,11 +190,24 @@ const LifeCalendar = ({ birthDate, events }) => {
           >
           </rect>
         </LifeLayer>
+        { highlightEvent 
+          ? <LifeLayer
+              dates={ Array(dates.find(date => date.eventIds.indexOf(highlightEvent.id) !== -1)) || [] }
+              config={ {squareSize, squareMargin, weekNewYear, paddingMinorHorizontal} }
+            >
+              <rect
+                width={squareSize * 2} 
+                height={squareSize * 2}
+                transform={`translate(${-squareSize/2},${-squareSize/2})`}
+                style={{fill: "none", stroke: "black", strokeWidth: "2px"}}
+              >
+              </rect>
+            </LifeLayer>
+          : null
+        }
 			</g>
 		</svg>
 	)
 }
-
-
 
 export default LifeCalendar;
