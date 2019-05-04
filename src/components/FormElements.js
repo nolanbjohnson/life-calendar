@@ -20,7 +20,7 @@ export const FormTextArea = styled.textarea.attrs({
   className: "db border-box hover-black measure ba b--black-20 pa2 br2 mb2 w-100 border-box"
 })``
 
-export const FormSubmit = styled.input.attrs({
-  className: props => `b ph3 pv2 input-reset ba b--black bg-transparent f6 dib ${props.disabled ? "" : "grow pointer"}`
-})``
+export const FormSubmit = styled.input.attrs(props => ({
+  className: `b ph3 pv2 input-reset ba b--black bg-transparent f6 dib ${props.disabled ? "" : "grow pointer"}`
+}))``
 

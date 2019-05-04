@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment'
 import { range } from 'd3-array'
 
@@ -6,7 +6,6 @@ import LifeGrid from './LifeGrid'
 import LifeLayer from './LifeLayer'
 
 import { getWeekNumber } from '../../helpers/utils'
-import { backgroundColorRandom } from '../../helpers/utils'
 import '../../App.css';
 
 // configuration
@@ -21,33 +20,49 @@ const height = rows * (squareSize + squareMargin)
 
 const daysPerSquare = Math.floor(365/squaresPerRow)
 
-
 const nowDate = moment.utc()
 
 const config = {squareSize, squareMargin, paddingMinorHorizontal}
 
-
-const LifeCalendar = ({ birthDate }) => {
+const LifeCalendar = ({ birthDate, events }) => {
 
   const [displayLayer, setDisplayLayer] = useState(null)
+  const [dates, setDates] = useState([])
 
   // this would be the place to centralize a useReducer redux style state
 
   // TODO refactor this to work not just for weeks! 
 
   // create the dates array
-  const dates = range(squaresPerRow * rows).map((n, i)=> {
-    const date = moment.utc(birthDate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
-    const obj = {
-      startDate: date.format('YYYY-MM-DD'),
-      endDate: date.add(daysPerSquare - 1,'d').format('YYYY-MM-DD'),
-      row: Math.floor(i/squaresPerRow),
-      column: i % squaresPerRow,
-      data: {}
-    }
 
-    return { ...obj, id: `${obj.row}-${obj.column}`, current: moment.utc(obj.startDate) <= nowDate && moment.utc(obj.endDate).add(1, 'd') >= nowDate }
-  })
+  useEffect(() => {
+    const datesArray = range(squaresPerRow * rows).map((n, i)=> {
+      const startDate = moment.utc(birthDate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
+      const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
+      const obj = {
+        startDate: startDate.format("YYYY-MM-DD"),
+        startDateLocaleFormat: startDate.format("M/DD/YY"),
+        endDate: endDate.format("YYYY-MM-DD"),
+        endDateLocaleFormat: endDate.format("M/DD/YY"),
+        row: Math.floor(i/squaresPerRow),
+        column: i % squaresPerRow,
+        current: startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
+        data: {
+          events: events.filter(event => event.type==='home' && 
+                                        (
+                                          (moment.utc(event.startDate) <= startDate && moment.utc(event.endDate || nowDate) >= moment.utc(startDate)) ||
+                                          (moment.utc(event.startDate) >= startDate && moment.utc(event.startDate) <= moment.utc(endDate))
+                                        ))
+        }
+      }
+
+      return { 
+        ...obj, 
+        id: `${obj.row}-${obj.column}`,
+      }
+    })
+    setDates(datesArray)
+  }, [events])
   
   const weekNewYear = (52 - getWeekNumber(birthDate)[1]) % 52
 

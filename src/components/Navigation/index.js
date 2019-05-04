@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { AuthUserContext } from '../Session'
 import { withFirebase } from '../Firebase'
 import SignOut from '../SignOut'
-import { backgroundColorRandom } from '../../helpers/utils'
 import * as ROUTES from '../../helpers/routes'
 import * as ROLES from '../../helpers/roles'
 
@@ -31,7 +30,7 @@ const NavLink = styled(Link).attrs(({ primary, tight }) => ({
 }))``
 
 const Navigation = (props) => {
-	const [userName, setUserName] = useState('')
+	const authUser = useContext(AuthUserContext)
 
 	return (
 		<Nav> {/*style={{ display: "flex", alignContent: "center", justifyContent: "center", width: "100%"}}> */}
@@ -68,23 +67,20 @@ const Navigation = (props) => {
 				</NavItem>
 			</SiteNavigation>
 			<UserNavigation>
-				<AuthUserContext.Consumer>
-					{ authUser => (
-						authUser
-						? <NavItem>
-							{ authUser.roles[ROLES.ADMIN] ? <strong>^</strong> : null}
-							<small>{ authUser.username }</small>
-							<SignOut />
-						  </NavItem>
+				{ 
+				authUser
+				? <NavItem>
+					{ authUser.roles[ROLES.ADMIN] ? <strong>^</strong> : null}
+					<small>{ authUser.username }</small>
+					<SignOut />
+				  </NavItem>
 
-						: <NavItem>
-							<NavLink to={ROUTES.SIGNIN}>
-								Sign In
-							</NavLink>
-						  </NavItem>
-						)
-					}
-				</AuthUserContext.Consumer>
+				: <NavItem>
+					<NavLink to={ROUTES.SIGNIN}>
+						Sign In
+					</NavLink>
+				  </NavItem>
+				}
 			</UserNavigation>
 		</Nav>
 	)

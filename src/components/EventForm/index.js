@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { withFirebase } from '../Firebase'
 import { AuthUserContext } from '../Session'
 
@@ -7,7 +7,9 @@ import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } fro
 
 const EventForm = props => {
 
-	const { initialStartDate, initialEndDate, rangeMode, unsetSelect } = props
+	const authUser = useContext(AuthUserContext)
+
+	const { initialStartDate, initialEndDate, rangeMode } = props
 	
 	const [name, setName] = useState('')
 	const [emoji, setEmoji] = useState('')
@@ -17,8 +19,8 @@ const EventForm = props => {
 	const [eventType, setEventType] = useState('event')
 
 	useEffect(() => {
-		setStartDate(initialStartDate)
-		setEndDate(initialEndDate)
+		setStartDate(initialStartDate || '')
+		setEndDate(initialEndDate || '')
 	}, [initialStartDate, initialEndDate])
 
 	useEffect(() => {
@@ -56,86 +58,83 @@ const EventForm = props => {
 	}
 
 	return (
-		<AuthUserContext.Consumer>
-		{ authUser => 
-			<Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto" }}>
-				<FormSection>
-					<FormLabel 
-						htmlFor="startDate"
+		<Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto" }}>
+			<h2>New Event</h2>
+			<FormSection>
+				<FormLabel>
+					<span 
+						role="img" 
+						aria-label="Set Start to Today" 
+						onClick={ () => setStartDate(moment().format("YYYY-MM-DD"))}
 					>
-						<span 
-							role="img" 
-							aria-label="Set Start to Today" 
-							onClick={ () => setStartDate(moment().format("YYYY-MM-DD"))}
-						>
-							📅
-						</span>
-						{ `${ rangeMode ? "Start " : "" }Date` }
-					</FormLabel>
+						📅
+					</span>
+					{ `${ rangeMode ? "Start " : "" }Date` }
 					<FormInput 
 						name="startDate" 
 						type="date" 
 						value={startDate}
 						onChange={e => setStartDate(e.target.value)}
 					/>
-					{
-						rangeMode
-						? (
-							<React.Fragment>
-							<FormLabel 
-								htmlFor="endDate"
+				</FormLabel>
+				{
+					rangeMode
+					? (
+						<React.Fragment>
+						<FormLabel>
+							<span 
+								role="img" 
+								aria-label="Set End to Today" 
+								onClick={ () => setEndDate(moment().format("YYYY-MM-DD"))}
 							>
-								<span 
-									role="img" 
-									aria-label="Set End to Today" 
-									onClick={ () => setEndDate(moment().format("YYYY-MM-DD"))}
-								>
-									📅
-								</span>
-								End Date
-							</FormLabel>
+								📅
+							</span>
+							End Date
 							<FormInput 
 								name="endDate" 
 								type="date" 
 								value={endDate}
 								onChange={e => setEndDate(e.target.value)}
 							/>
-							</React.Fragment>
-						  )
-						: null
-					}
-					<FormLabel htmlFor="name">Event Name / Description</FormLabel>
+						</FormLabel>
+						</React.Fragment>
+					  )
+					: null
+				}
+				<FormLabel>
+					Event Name / Description
 					<FormTextArea 
 						name="name" 
 						type="text" 
 						value={name} 
 						onChange={e => setName(e.target.value)}
 					/>
-					<FormLabel htmlFor="emoji">Emoji <span className="normal black-60">(optional)</span></FormLabel>
+				</FormLabel>
+				<FormLabel>
+					Emoji <span className="normal black-60">(optional)</span>
 					<FormInput 
 						name="emoji" 
 						type="text" 
 						value={emoji} 
 						onChange={e => setEmoji(e.target.value)} 
 					/>
-					<FormLabel htmlFor="hidden">
-						<input 
-							name="hidden" 
-							type="checkbox"
-							checked={hidden}
-							onChange={e => setHidden(e.target.checked)}
-						/>
-						<span> Hidden</span>
-					</FormLabel>
-					<input name="type" type="text" value={eventType} readOnly style={{display: "none"}}/>
-				</FormSection>
-				<FormSubmit 
-					type="submit" 
-					value="Add Event"
-				/>
-			</Form>
-		}	
-		</AuthUserContext.Consumer>
+				</FormLabel>
+				<FormLabel>
+					<input 
+						name="hidden" 
+						type="checkbox"
+						checked={hidden}
+						onChange={e => setHidden(e.target.checked)}
+					/>
+					<span> Hidden</span>
+				</FormLabel>
+				<input name="type" type="text" value={eventType} readOnly style={{display: "none"}}/>
+			</FormSection>
+			<FormSubmit 
+				type="submit" 
+				value="Add Event"
+			/>
+		</Form>
 	)
 
 }

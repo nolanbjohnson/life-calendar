@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
@@ -10,7 +10,6 @@ import * as ROUTES from '../../helpers/routes'
 const withAuthorization = condition => Component => { 
 
 	const withAuthorization = props => {
-		const [authUser, setAuthUser] = useState(null)
 
 		useEffect(() => {
 			const listener = props.firebase.onAuthUserListener(

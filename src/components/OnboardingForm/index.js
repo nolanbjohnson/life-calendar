@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
-import moment from 'moment'
 
 import { withFirebase } from '../Firebase'
 import { AuthUserContext } from '../Session'
-import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } from '../FormElements'
+import { Form, FormSection, FormLabel, FormInput, FormSubmit } from '../FormElements'
 
 import * as ROUTES from '../../helpers/routes'
 
@@ -17,15 +16,6 @@ const OnboardingFormBase = props => {
 
 	const resetForm = () => {
 		setBirthDate('')
-	}
-
-	const getUser = userRef => {
-		// TODO how would this be a promise or use async/await? What does userRef.once return?
-		userRef.once('value', snapshot => {
-			const userObject = snapshot.val()
-
-			console.log('user_after', userObject)
-		})
 	}
 
 	const handleSubmit = async (event, authUser) => {

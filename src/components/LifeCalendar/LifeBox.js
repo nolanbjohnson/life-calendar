@@ -1,33 +1,59 @@
 import React, { useState } from 'react'
 import { pure } from 'recompose'
-import moment from 'moment'
 
-import { colorSwitch, backgroundColorRandom } from '../../helpers/utils'
+const colorAssignment = {}
 
-
-const borderRadius = 2
-
-const dateBetween = (date, start, end) => {
-	return date >= start && date <= end
+const randColor = (name) => {
+	if (colorAssignment[name]) return colorAssignment[name]
+	
+	let newColor = ""
+	switch (Math.floor(Math.random() * 8)) {
+		case 0:
+			newColor = "goldenrod"
+			break
+		case 1:
+			newColor = "mistyrose"
+			break
+		case 2:
+			newColor = "indianred"
+			break
+		case 3:
+			newColor = "grey"
+			break
+		case 4:
+			newColor = "green"
+			break
+		case 5:
+			newColor = "red"
+			break
+		case 6:
+			newColor = "purple"
+			break
+		case 7:
+			newColor = "blue"
+			break
+		default:
+			newColor = "#ebedf0"
+			break
+	}
+ 	
+ 	colorAssignment[name] = newColor
+ 	return newColor
 }
 
-const LifeBoxBase = ({ squareSize, startDate, endDate, nowBox }) => {
+const LifeBoxBase = ({ squareSize, nowBox, title, hasEvents }) => {
 
 	const [clicked, setClicked] = useState(false)
 	const [hovered, setHovered] = useState(false)
 
-	const start = moment.utc(startDate)
-	const end = moment.utc(endDate)
 	// const nowBox = dateBetween(moment.utc(), start, moment.utc(endDate).add(1, 'd'))
 	return (
-		<g key={startDate}>
+		<g key={title}>
 			<rect width={squareSize} 
 		          height={squareSize}
 		          className="square"
-		          // rx={borderRadius}
-		          // ry={borderRadius}
 		          style={{ 
-		          			...{fill: clicked || hovered ? "steelblue" : "#ebedf0"},
+		          			...{fill: clicked || hovered ? "steelblue" : hasEvents ? randColor(hasEvents) : "#ebedf0"},
 		          		  	...(nowBox ? { strokeWidth:  1, stroke: "steelblue" } : {})
 		          		}}
 		          onClick={ () => setClicked(!clicked) }
@@ -35,7 +61,7 @@ const LifeBoxBase = ({ squareSize, startDate, endDate, nowBox }) => {
 		          onMouseOut={ () => setHovered(false) }
 		    >
 				<title style={{fontSize: "3em"}}>
-				  { `${start.format("M/DD/YY")} - ${end.format("M/DD/YY")}` }
+				  { title }
 				</title>
 			</rect>
 		</g>

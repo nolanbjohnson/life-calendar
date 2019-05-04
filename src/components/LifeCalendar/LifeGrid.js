@@ -1,40 +1,5 @@
-import React, { memo } from 'react'
+import React from 'react'
 import LifeBox from './LifeBox'
-import moment from 'moment'
-
-const parseDateID = (dateID) => dateID.split('-').map(number => parseInt(number))
-
-const dateIDBetween = (dateID, startID, endID) => {
-
-	if (dateID === '' || startID === '' || endID === '') return false
-
-	const [row, column] = parseDateID(dateID)
-	let [rowStart, columnStart] = parseDateID(startID)
-	let [rowEnd, columnEnd] = parseDateID(endID)
-
-	if ((rowStart * 1000 + columnStart) > (rowEnd * 1000 + columnEnd)) {
-		let [rowStartB, columnStartB] = [rowStart, columnStart] // saving these for a second
-
-		rowStart = rowEnd
-		columnStart = columnEnd
-		
-		rowEnd = rowStartB
-		columnEnd = columnStartB
-	}
-
-	if ((rowStart === row && row < rowEnd) && (columnStart <= column)) {
-		return true
-	} else if ((rowStart === row && row === rowEnd) && (columnStart <= column && column <= columnEnd)) {
-		return true
-	} else if ((rowStart < row && row === rowEnd) && (column <= columnEnd)) {
-		return true
-	} else if (rowStart < row && row < rowEnd) {
-		return true
-	} else {
-		return false
-	}
-
-}
 
 const LifeGrid = ({ dates, birthDate, config, weekNewYear }) => {
 	
@@ -42,13 +7,12 @@ const LifeGrid = ({ dates, birthDate, config, weekNewYear }) => {
 
 	const rowHeight = squareSize + squareMargin
 
-	const yourAge = (new Date() - birthDate) / 1000 / 86400 / 365
-
 	return (
 		dates.map((date,i) => {
 	        return (
 	            <g key={`${date.row}-${date.column}`}
 	               transform={`translate(${((squareSize + squareMargin) * date.column) + (date.column >= weekNewYear ? paddingMinorHorizontal : 0)}, ${date.row * rowHeight})`}
+	               onClick={ () => console.log(date) }
 	            >
 	              { /*
 	                date.row === 0
@@ -76,9 +40,9 @@ const LifeGrid = ({ dates, birthDate, config, weekNewYear }) => {
 	              }
 	              <LifeBox
 	              	squareSize={ squareSize }
-	              	startDate={ date.startDate }
-	              	endDate={ date.endDate }
 	              	nowBox={ date.current }
+	              	title={ `${date.startDateLocaleFormat} - ${date.endDateLocaleFormat}` }
+	              	hasEvents={ date.data.events.length > 0 ? date.data.events[0].name : false }
 	              > 
 	              </LifeBox>
 	            </g>

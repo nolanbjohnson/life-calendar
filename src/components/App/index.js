@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom'
-import moment from 'moment'
+import React, { useContext } from 'react'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import { withAuthentication, AuthUserContext } from '../Session'
 
@@ -8,6 +7,7 @@ import Navigation from '../Navigation'
 import LifeGridScreen from '../../screens/LifeGridScreen'
 import LifeEventsScreen from '../../screens/LifeEventsScreen'
 import Onboarding from '../../screens/OnboardingScreen'
+import PublicHomePage from '../../screens/PublicHomePage'
 import SignUp from '../SignUp'
 import SignIn from '../SignIn'
 
@@ -30,7 +30,7 @@ const App = props => {
                   ? authUser.birthDate
                       ? <LifeGridScreen />
                       : <Redirect to={ ROUTES.ONBOARDING }/>
-                  : <LifeGridScreen /> // TODO replace this will public home page
+                  : <PublicHomePage /> // TODO replace this will public home page
                 )} 
                />
                <Route path={ ROUTES.ONBOARDING } exact component={ Onboarding }/>
