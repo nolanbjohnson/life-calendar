@@ -5,11 +5,39 @@ import moment from 'moment'
 
 import { withFirebase } from '../Firebase'
 import { AuthUserContext } from '../Session'
+import DatePicker from '../DatePicker/'
 
 
-const EventListItem = styled.li.attrs({
-	className: 'list pl0 mb2 f6 lh-copy tj nowrap'
+const EventListItemTag = styled.li.attrs({
+	className: 'list pl0 mb2 f6 lh-copy tj nowrap hide-child'
 })``
+
+const Button = styled.button.attrs(({ showOnHover }) => ({
+	className: `button-reset bw0 f5 grow-large pointer bg-transparent ${showOnHover ? 'child' : ''}`
+}))``
+
+const EventListItem = ({ event, ...props }) => {
+	const [dateEditMode, setDateEditMode] = useState(false)
+
+	// TODO date picker doesn't send an updated to firebase - it just looks cool
+	return (
+		<EventListItemTag>
+			{ props.children }
+			<DatePicker
+	          initialDate={ event.startDate.toISOString().replace(/T.*/,"") }
+	          format="MMM DD, YYYY"
+	          editMode={ dateEditMode }
+	          closeForm={ () => setDateEditMode(false) }
+	          openForm={ () => setDateEditMode(true) }
+	          onSubmit={ (e) => console.log(e.target.value) }
+	          inline
+	        />
+	        <span>
+			{ `: ${event.name} ${event.emoji}` }
+			</span>
+		</EventListItemTag>
+	)
+}
 
 
 const EventList = props => {
@@ -56,7 +84,18 @@ const EventList = props => {
 					events
 						.sort((a, b) => a.startDate > b.startDate ? 1 : -1 )
 						.map(event => {
-						return <EventListItem key={event.id}><button type="button" onClick={ ()=> removeItem(event.id) }>✖</button>{ `${moment.utc(event.startDate).format("MMM DD, YYYY")}: ${event.name} ${event.emoji}` }</EventListItem>
+						return (
+							<EventListItem event={event} key={event.id}>
+								<Button 
+									type="button" 
+									title="delete"
+									showOnHover 
+									onClick={ ()=> removeItem(event.id) }
+								>
+									✖
+								</Button>
+							</EventListItem>
+						)
 					})
 				}
 			</ul>

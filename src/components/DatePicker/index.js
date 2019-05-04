@@ -7,6 +7,7 @@ const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openFo
 
 	useEffect(() => {
 		setDate(initialDate)
+		console.log(initialDate)
 	}, [initialDate])
 	
 	const handleSubmit = (e) => {
@@ -27,7 +28,7 @@ const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openFo
 				<input 
 					value={ date }
 					type="date"
-					name="birthDate"
+					name="date"
 					className="input-reset black bw0"
 					onChange={ (e) => setDate(e.target.value) } 
 				/>
