@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { pure } from 'recompose'
 import moment from 'moment'
 import { range } from 'd3-array'
 
@@ -8,9 +9,7 @@ import LifeLayer from './LifeLayer'
 import { getWeekNumber } from '../../helpers/utils'
 import '../../App.css';
 
-
-
-const LifeCalendar = ({ birthDate, events, highlightEvent }) => {
+const LifeCalendar = ({ birthDate, events, showEvent }) => {
 
   const [displayLayer, setDisplayLayer] = useState(null)
   const [dates, setDates] = useState([])
@@ -190,9 +189,9 @@ const LifeCalendar = ({ birthDate, events, highlightEvent }) => {
           >
           </rect>
         </LifeLayer>
-        { highlightEvent 
+        { showEvent 
           ? <LifeLayer
-              dates={ Array(dates.find(date => date.eventIds.indexOf(highlightEvent.id) !== -1)) || [] }
+              dates={ Array(dates.find(date => date.eventIds.indexOf(showEvent.id) !== -1)) || [] }
               config={ {squareSize, squareMargin, weekNewYear, paddingMinorHorizontal} }
             >
               <rect
