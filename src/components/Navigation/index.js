@@ -42,10 +42,10 @@ const Navigation = (props) => {
 				</NavLink>
 				<NavItem>
 					<NavLink to={ROUTES.LANDING} primary={"true"}>
-						Life Grid		
+						Life Calendar		
 					</NavLink>
 				</NavItem>
-				{ authUser && authUser.onboardingComplete
+				{ authUser && authUser.onboardingCompleted
 
 					? <React.Fragment>
 						<NavItem>

@@ -67,7 +67,8 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
         data: {
           events: eventsData.filter(event => event.type === 'event'),
-          homes: eventsData.filter(event => event.type === 'home')
+          homes: eventsData.filter(event => event.type === 'home'),
+          schools: eventsData.filter(event => event.type === 'School'), 
         },
         eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
       }
