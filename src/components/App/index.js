@@ -6,7 +6,7 @@ import { withAuthentication, AuthUserContext } from '../Session'
 import Navigation from '../Navigation'
 import LifeGridScreen from '../../screens/LifeGridScreen'
 import LifeEventsScreen from '../../screens/LifeEventsScreen'
-import Onboarding from '../../screens/OnboardingScreen'
+import OnboardingScreen from '../../screens/OnboardingScreen'
 import PublicHomePage from '../../screens/PublicHomePage'
 import SignUp from '../SignUp'
 import SignIn from '../SignIn'
@@ -27,13 +27,20 @@ const App = props => {
              <Switch>
                <Route path={ ROUTES.HOME } exact render={() => (
                   authUser
-                  ? authUser.birthDate
+                  ? authUser.onboardingCompleted
                       ? <LifeGridScreen />
                       : <Redirect to={ ROUTES.ONBOARDING }/>
-                  : <PublicHomePage /> // TODO replace this will public home page
+                  : <PublicHomePage />
                 )} 
                />
-               <Route path={ ROUTES.ONBOARDING } exact component={ Onboarding }/>
+               <Route path={ ROUTES.ONBOARDING } exact render={() => (
+                  authUser
+                  ? !authUser.onboardingCompleted
+                      ? <OnboardingScreen />
+                      : <Redirect to={ ROUTES.HOME }/>
+                  : <PublicHomePage />
+                )} 
+               />
                <Route path={ ROUTES.EVENTS } exact component={ LifeEventsScreen }/>
                <Route path={ ROUTES.STAGES } exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
                <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>

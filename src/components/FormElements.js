@@ -12,9 +12,9 @@ export const FormLabel = styled.label.attrs({
   className: "f6 b db mb2 tl"
 })``
 
-export const FormInput = styled.input.attrs({
-  className: "input-reset ba b--black-20 pa2 mb2 db w-100 border-box"
-})``
+export const FormInput = styled.input.attrs(({ className }) => ({
+  className: `input-reset ba b--black-20 pa2 mb2 db w-100 border-box ${className || ''}`
+}))``
 
 export const FormTextArea = styled.textarea.attrs({
   className: "db border-box hover-black measure ba b--black-20 pa2 br2 mb2 w-100 border-box"

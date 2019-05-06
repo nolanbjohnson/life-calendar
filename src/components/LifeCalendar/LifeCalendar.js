@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { pure } from 'recompose'
 import moment from 'moment'
 import { range } from 'd3-array'
@@ -7,9 +8,9 @@ import LifeGrid from './LifeGrid'
 import LifeLayer from './LifeLayer'
 
 import { getWeekNumber } from '../../helpers/utils'
-import '../../App.css';
+import '../../App.css'
 
-const LifeCalendar = ({ birthDate, events, showEvent }) => {
+const LifeCalendar = ({ birthdate, events, showEvent }) => {
 
   const [displayLayer, setDisplayLayer] = useState(null)
   const [dates, setDates] = useState([])
@@ -21,12 +22,13 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
   const paddingMinorHorizontal = 3
   const squareMargin = 1
   const squaresPerRow = 52
-  const squareSize = Math.floor((width - (paddingMinorHorizontal * 3) - (squareMargin * squaresPerRow)) / squaresPerRow)
+  const squareSize = Math.round(100*(width - (paddingMinorHorizontal) - (squareMargin * squaresPerRow)) / squaresPerRow)/100
   const height = rows * (squareSize + squareMargin)
 
   const daysPerSquare = Math.floor(365/squaresPerRow)
 
   const nowDate = moment.utc()
+  const weekNewYear = (53 - getWeekNumber(birthdate)[1]) % 52
 
   const config = {squareSize, squareMargin, paddingMinorHorizontal}
 
@@ -37,8 +39,15 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
   // create the dates array
 
   useEffect(() => {
+    const defaultBirthdate = birthdate.toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+    console.log(defaultBirthdate)
+
     const datesArray = range(squaresPerRow * rows).map((n, i)=> {
-      const startDate = moment.utc(birthDate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
+      // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
+      // and endDate is nextStartDate - 1, which would add the extra day to the end.
+      // TODO also leap years...Feb 29 is an issue for the following week, which is missing a day. All this only matters if
+      // an event occurs on that specific date that falls between two squares
+      const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
       const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
 
       const eventsData = events.filter(event =>
@@ -47,6 +56,7 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
                                           (moment.utc(event.startDate) >= startDate && moment.utc(event.startDate) <= moment.utc(endDate))
                                         ))
 
+
       const obj = {
         startDate: startDate.format("YYYY-MM-DD"),
         startDateLocaleFormat: startDate.format("M/DD/YY"),
@@ -54,7 +64,7 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
         endDateLocaleFormat: endDate.format("M/DD/YY"),
         row: Math.floor(i/squaresPerRow),
         column: i % squaresPerRow,
-        current: startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
+        current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
         data: {
           events: eventsData.filter(event => event.type === 'event'),
           homes: eventsData.filter(event => event.type === 'home')
@@ -68,50 +78,25 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
       }
     })
     setDates(datesArray)
-  }, [events])
-  
-  const weekNewYear = (52 - getWeekNumber(birthDate)[1]) % 52
+  }, [events, birthdate])
 
 	return (
 		<svg 
-			width={width + margin.left + margin.right} 
-			height={height + margin.top + margin.bottom}
-			// className="center"
-      // className="debug-grid"
+			width={ width + margin.left + margin.right } 
+			height={ height + margin.top + margin.bottom }
 		>
 			<g transform={`translate(${margin.left},${margin.top})`}>
-        <text 
-          transform={`translate(0,-10)`}
-          onMouseEnter={ () => setDisplayLayer(1)} 
-          onMouseOut={ () => setDisplayLayer(null) }
+        <text
+          transform={`translate(${width/2},-10)`}
+          textAnchor="middle"
+          alignmentBaseline="baseline"
         >
-          🐙
-        </text>
-        <text 
-          transform={`translate(20,-10)`}
-          onMouseEnter={ () => setDisplayLayer(2)} 
-          onMouseOut={ () => setDisplayLayer(null) } 
-        >
-          🐙
-        </text>
-        <text 
-          transform={`translate(40,-10)`}
-          onMouseEnter={ () => setDisplayLayer(3)} 
-          onMouseOut={ () => setDisplayLayer(null) } 
-        >
-          🐙
-        </text>
-        <text 
-          transform={`translate(60,-10)`}
-          onMouseEnter={ () => setDisplayLayer(4)} 
-          onMouseOut={ () => setDisplayLayer(null) } 
-        >
-          🐙
+          Your Life Calendar
         </text>
 				<LifeGrid 
 					dates={ dates }
 					config={ config }
-					birthDate={ birthDate }
+					birthdate={ birthdate }
           weekNewYear={ weekNewYear }
 				/>
         { /* <LifeLayer
@@ -141,6 +126,38 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
           </text>
         </LifeLayer>
         */ }
+    {
+      events.length > 0
+      ? (
+        <React.Fragment>
+        <text 
+          transform={`translate(0,-10)`}
+          onMouseEnter={ () => setDisplayLayer(1)} 
+          onMouseOut={ () => setDisplayLayer(null) }
+        >
+          🐙
+        </text>
+        <text 
+          transform={`translate(20,-10)`}
+          onMouseEnter={ () => setDisplayLayer(2)} 
+          onMouseOut={ () => setDisplayLayer(null) } 
+        >
+          🐙
+        </text>
+        <text 
+          transform={`translate(40,-10)`}
+          onMouseEnter={ () => setDisplayLayer(3)} 
+          onMouseOut={ () => setDisplayLayer(null) } 
+        >
+          🐙
+        </text>
+        <text 
+          transform={`translate(60,-10)`}
+          onMouseEnter={ () => setDisplayLayer(4)} 
+          onMouseOut={ () => setDisplayLayer(null) } 
+        >
+          🐙
+        </text>
         <LifeLayer
           className={ displayLayer === 1 ? "" : "dn" }
           dates={ dates.filter(date => date.startDate < '1991-05-03') }
@@ -204,9 +221,23 @@ const LifeCalendar = ({ birthDate, events, showEvent }) => {
             </LifeLayer>
           : null
         }
+        </React.Fragment>
+        )
+        : null
+      }
 			</g>
 		</svg>
 	)
+}
+
+LifeCalendar.propTypes = {
+  birthdate: PropTypes.instanceOf(Date),
+  events: PropTypes.array,
+}
+
+LifeCalendar.defaultProps = {
+  birthdate: new Date(Date.UTC(new Date().getFullYear(),0,1)),
+  events: []
 }
 
 export default LifeCalendar;

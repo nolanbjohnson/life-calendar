@@ -71,6 +71,7 @@ const EventList = props => {
 	      setLoading(false)
 	    });
 	}, [])
+
 	return (
 		<div>
 			<h2>Events</h2>
@@ -78,8 +79,9 @@ const EventList = props => {
 			loading
 			? <div>Loading...</div>
 			: <ul className="pa0 pb2 overflow-x-scroll">
-				{
-					events
+				{	
+					events.length>0
+					? events
 						.sort((a, b) => a.startDate > b.startDate ? 1 : -1 )
 						.map(event => {
 						return (
@@ -95,6 +97,7 @@ const EventList = props => {
 							</EventListItem>
 						)
 					})
+					: <li><em>No events yet</em></li>
 				}
 			</ul>
 			}
