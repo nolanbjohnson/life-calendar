@@ -42,36 +42,42 @@ const Navigation = (props) => {
 				</NavLink>
 				<NavItem>
 					<NavLink to={ROUTES.LANDING} primary={"true"}>
-						Life Grid		
+						Life Calendar		
 					</NavLink>
 				</NavItem>
-				<NavItem>
-					<NavLink to={ROUTES.EVENTS}>
-						Life Events
-					</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink to={ROUTES.STAGES}>
-						Life Stages
-					</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink to={ROUTES.EXPLORE}>
-						Explore
-					</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink to={ROUTES.IMPOSSIBLE}>
-						Impossible You!
-					</NavLink>
-				</NavItem>
+				{ authUser && authUser.onboardingCompleted
+
+					? <React.Fragment>
+						<NavItem>
+							<NavLink to={ROUTES.EVENTS}>
+								Life Events
+							</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink to={ROUTES.STAGES}>
+								Life Stages
+							</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink to={ROUTES.EXPLORE}>
+								Explore
+							</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink to={ROUTES.IMPOSSIBLE}>
+								Impossible You!
+							</NavLink>
+						</NavItem>
+					</React.Fragment>
+					: null
+				}
 			</SiteNavigation>
 			<UserNavigation>
 				{ 
 				authUser
 				? <NavItem>
 					{ authUser.roles[ROLES.ADMIN] ? <strong>^</strong> : null}
-					<small>{ authUser.username }</small>
+					<strong>{`Hi, ${ authUser.username }`}</strong>
 					<SignOut />
 				  </NavItem>
 

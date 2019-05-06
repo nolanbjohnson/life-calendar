@@ -9,7 +9,7 @@ const EventForm = props => {
 
 	const authUser = useContext(AuthUserContext)
 
-	const { initialStartDate, initialEndDate, rangeMode } = props
+	const { initialName, initialEmoji, initialStartDate, initialEndDate, rangeMode } = props
 	
 	const [name, setName] = useState('')
 	const [emoji, setEmoji] = useState('')
@@ -19,9 +19,11 @@ const EventForm = props => {
 	const [eventType, setEventType] = useState('event')
 
 	useEffect(() => {
+		setName(initialName || '')
+		setEmoji(initialEmoji || '')
 		setStartDate(initialStartDate || '')
 		setEndDate(initialEndDate || '')
-	}, [initialStartDate, initialEndDate])
+	}, [initialName, initialEmoji, initialStartDate, initialEndDate])
 
 	useEffect(() => {
 		setEventType(rangeMode ? 'home' : 'event')

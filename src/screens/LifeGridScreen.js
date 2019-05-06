@@ -17,14 +17,17 @@ const LifeGridScreen = props => {
 		const eventsRef = props.firebase.userEvents(authUser.uid)
 
 	    eventsRef.on('value', snapshot => {
-	      let eventsObj = snapshot.val();
+	      	let eventsObj = snapshot.val();
 	      
-	      let events = Object.keys(eventsObj).map(key => ({
-	      	...eventsObj[key],
-	      	uid: key
-	      }))
-	      
-	      setEvents(events)
+	      	if (eventsObj) {
+				let events = Object.keys(eventsObj).map(key => ({
+					...eventsObj[key],
+					uid: key
+				}))
+			    setEvents(events)
+	      	} else {
+	      		setEvents([])
+	      	}
 
 	    });
 	}, [])
@@ -33,7 +36,7 @@ const LifeGridScreen = props => {
 		<div className="w-100 mw8 ph3 center">
 			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr minmax(30%,300px)", gridGap: "1rem"}}>
 				<LifeCalendar 
-					birthDate={ new Date(authUser.birthDate) }
+					birthdate={ new Date(authUser.birthdate) }
 					events={events}
 					showEvent={showEvent}
 				/>

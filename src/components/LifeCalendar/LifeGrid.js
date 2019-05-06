@@ -1,7 +1,7 @@
 import React from 'react'
 import LifeBox from './LifeBox'
 
-const LifeGrid = ({ dates, birthDate, config, weekNewYear }) => {
+const LifeGrid = ({ dates, birthdate, config, weekNewYear }) => {
 	
 	const { squareSize, squareMargin, paddingMinorHorizontal } = config
 
