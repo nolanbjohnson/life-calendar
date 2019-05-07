@@ -25,6 +25,7 @@ const App = props => {
            </header>
            <div style={{flex: "1 1 0%"}}>
              <Switch>
+
                <Route path={ ROUTES.HOME } exact render={() => (
                   authUser
                   ? authUser.onboardingCompleted
@@ -33,6 +34,7 @@ const App = props => {
                   : <PublicHomePage />
                 )} 
                />
+
                <Route path={ ROUTES.ONBOARDING } exact render={() => (
                   authUser
                   ? !authUser.onboardingCompleted
@@ -41,13 +43,32 @@ const App = props => {
                   : <PublicHomePage />
                 )} 
                />
+
                <Route path={ ROUTES.EVENTS } exact component={ LifeEventsScreen }/>
-               <Route path={ ROUTES.STAGES } exact render={() => <h2 style={{padding: "100px"}}>stages</h2>}/>
-               <Route path={ ROUTES.EXPLORE } exact render={() => <h2 style={{padding: "100px"}}>explore</h2>}/>
-               <Route path={ ROUTES.IMPOSSIBLE } exact render={() => <h2 style={{padding: "100px"}}>Impossible You!</h2>}/>
+
+               <Route path={ ROUTES.EXPLORE } exact render={() => (
+                  <div className="w-100 mw8 ph3 center">
+                    <h2>Explore</h2>
+                    <p>Here you can search events and layers you've created and see how your life has changed over time</p>
+                  </div>
+                )}
+               />
+               
+               <Route path={ ROUTES.IMPOSSIBLE } exact render={() => (
+                  <div className="w-100 mw8 ph3 center">
+                    <h2>Impossible You!</h2>
+                    <p>The life calendar is great for documenting your past, but you can also plan for your future!</p>
+                    <p>Create some goals for your life and don't worry if they at first feel impossible - you can do amazing things one step at a time.</p>
+                  </div>
+                )}
+               />
+
                <Route path={ ROUTES.SIGNUP } exact component={ SignUp }/>
+               
                <Route path={ ROUTES.SIGNIN } exact component={ SignIn }/>
+               
                <Route render={() => <h2 style={{padding: "100px"}}>No Match</h2>}/>
+             
              </Switch>
            </div>
            <footer>

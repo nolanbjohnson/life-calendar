@@ -9,28 +9,28 @@ const randColor = (name) => {
 	let newColor = ""
 	switch (Math.floor(Math.random() * 8)) {
 		case 0:
-			newColor = "goldenrod"
+			newColor = "rgba(155,90,90,0.5)"
 			break
 		case 1:
-			newColor = "mistyrose"
+			newColor = "rgba(90,155,90,0.5)"
 			break
 		case 2:
-			newColor = "indianred"
+			newColor = "rgba(90,90,155,0.5)"
 			break
 		case 3:
-			newColor = "grey"
+			newColor = "rgba(155,90,155,0.5)"
 			break
 		case 4:
-			newColor = "green"
+			newColor = "rgba(155,155,90,0.5)"
 			break
 		case 5:
-			newColor = "red"
+			newColor = "rgba(90,155,155,0.5)"
 			break
 		case 6:
-			newColor = "purple"
+			newColor = "rgba(90,90,90,0.5)"
 			break
 		case 7:
-			newColor = "blue"
+			newColor = "rgba(30,90,155,0.5)"
 			break
 		default:
 			newColor = "#ebedf0"

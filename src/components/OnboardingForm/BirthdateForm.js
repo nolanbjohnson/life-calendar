@@ -1,13 +1,12 @@
 import React, { useState, useContext } from 'react'
 
-import { Form, FormSection, FormInput, FormSubmit } from '../FormElements'
+import { AuthUserContext } from '../Session'
+import { Form, FormSection } from '../FormElements'
 
 const BirthdateForm = props => {
-	const [birthdate, setBirthdate] = useState(props.authUser.birthdate.replace(/T.*/,'') || '')
+	const authUser = useContext(AuthUserContext)
 
-	const resetForm = () => {
-		setBirthdate('')
-	}
+	const [birthdate, setBirthdate] = useState(authUser.birthdate || '')
 
 	const handleSubmit = async (authUser, event, birthdate) => {
 		
@@ -27,7 +26,7 @@ const BirthdateForm = props => {
 	}
 
 	return (
-		<Form onSubmit={ event => handleSubmit(props.authUser, event, birthdate) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
+		<Form onSubmit={ event => handleSubmit(authUser, event, birthdate) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
 			<FormSection>
 				<label className="f6 b db mb2 tl">
 					We'll start with something simple - your birthdate!
@@ -35,7 +34,7 @@ const BirthdateForm = props => {
 					name="birthdate" 
 					type="date"
 					className="mt3 input-reset f3 bg-transparent bn"
-					value={birthdate}
+					value={birthdate.replace(/T.*/,'')}
 					onChange={e => setBirthdate(e.target.value)}
 				/>
 				</label>

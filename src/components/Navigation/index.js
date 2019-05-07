@@ -54,11 +54,6 @@ const Navigation = (props) => {
 							</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink to={ROUTES.STAGES}>
-								Life Stages
-							</NavLink>
-						</NavItem>
-						<NavItem>
 							<NavLink to={ROUTES.EXPLORE}>
 								Explore
 							</NavLink>

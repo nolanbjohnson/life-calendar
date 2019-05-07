@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import moment from 'moment'
 import styled from 'styled-components'
 
-import { Form, FormSection, FormInput, FormSubmit } from '../FormElements'
+import { AuthUserContext } from '../Session'
+
+import { Form, FormSection, FormInput } from '../FormElements'
 
 const templateSchoolLayer = [
 	{ name: "Kindergarten", startAge: 5, endAge: 6},
@@ -49,21 +51,26 @@ const LayerItem = ({part, index, onChange, children}) => (
 )
 
 const LayerForm = props => {
+	const authUser = useContext(AuthUserContext)
+
+	console.log('layerform', authUser)
+
 	const [layerName, setLayerName]	= useState('School')
 	const [schoolLayer, setSchoolLayer] = useState([])
-	const birthdate = new Date(props.authUser.birthdate)
+	const birthdate = new Date(authUser.birthdate)
 	const birthYear = birthdate.getFullYear()
+
 
 	useEffect(() => {
 		resetForm()
-	}, [])
+	}, [authUser])
 	
 	const resetForm = () => {
 		const schoolLayer = templateSchoolLayer.map(part => {
 			return {
 				name: part.name,
 				startDate: moment.utc(Date.UTC(birthYear + part.startAge, 8, 1)).format("YYYY-MM-DD"), // typical start Sept 1
-				endDate: moment.utc(Date.UTC(birthYear + part.endAge, 5, 1)).format("YYYY-MM-DD"), // typical end June 1
+				endDate: moment.utc(Date.UTC(birthYear + part.endAge, 7, 31)).format("YYYY-MM-DD"), // typical end June 1
 			}
 		})
 		setSchoolLayer(schoolLayer)
@@ -110,7 +117,7 @@ const LayerForm = props => {
 
 	if (!props.visible) return null
 	return (
-		<Form onSubmit={ event => handleSubmit(event, props.authUser) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
+		<Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
 			<p>Next let's add some details about you in the form of a Life Layer.</p>
 			<FormSection>
 			<label htmlFor="layer" className="f6 b db mb2 tl">
@@ -147,7 +154,7 @@ const LayerForm = props => {
 							</React.Fragment>
 					))
 				}
-				<button type="button" title="add a layer" className={`self-end w2 h2 b pa2 mh1 input-reset ba b--black bg-transparent f5 pointer grow`} onClick={ addLayer }>➕</button>
+				<button type="button" title="add a layer item" className={`self-end w2 h2 b pa2 mh1 input-reset ba b--black bg-transparent f5 pointer grow`} onClick={ addLayer }><span role="img" aria-label="add layer item">➕</span></button>
 			</section>
 			<button type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-green white f4 pointer grow`} ><span role="img" aria-label="backpack">🎒</span> Add the Layer <span role="img" aria-label="backpack">🎒</span></button>
 			<small>Layers represent the background color of your life grid - they shouldn't overlap</small>

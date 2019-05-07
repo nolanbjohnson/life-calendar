@@ -30,6 +30,6 @@ const LifeLayerBase = ({ dates, config, children, className }) => {
 
 const LifeLayer = pure(LifeLayerBase) // this doesn't work because of the "children" property: https://medium.com/welldone-software/why-did-you-render-mr-big-pure-react-component-part-2-common-fixing-scenarios-667bfdec2e0f
 
-LifeLayer.whyDidYouRender = true
+// LifeLayer.whyDidYouRender = true
 
 export default LifeLayer

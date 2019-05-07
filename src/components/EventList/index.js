@@ -70,6 +70,8 @@ const EventList = props => {
 	      setEvents(eventsState.filter(event=> event.type === 'event' && !event.hidden))
 	      setLoading(false)
 	    });
+
+	    return () => eventsRef.off()
 	}, [])
 
 	return (

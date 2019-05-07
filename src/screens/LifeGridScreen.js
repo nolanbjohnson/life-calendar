@@ -36,7 +36,7 @@ const LifeGridScreen = props => {
 		<div className="w-100 mw8 ph3 center">
 			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr minmax(30%,300px)", gridGap: "1rem"}}>
 				<LifeCalendar 
-					birthdate={ new Date(authUser.birthdate) }
+					birthdate={ authUser.birthdate }
 					events={events}
 					showEvent={showEvent}
 				/>

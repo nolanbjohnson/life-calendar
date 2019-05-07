@@ -27,7 +27,9 @@ const Onboarding = (props) => {
 	      	}
 
 	    });
-	}, [])
+
+	    return () => eventsRef.off()
+	}, [authUser])
 
 	return (
 		<div className="w-100 mw8 ph3 center">
@@ -45,6 +47,7 @@ const Onboarding = (props) => {
 		    	<div className="center">
 		    		<LifeCalendar 
 		    			{ ...(authUser.birthdate && { birthdate: new Date(authUser.birthdate) }) }
+		    			events={events}
 		    		/>
 		    	</div>
 		    </div>

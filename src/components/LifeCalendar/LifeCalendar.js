@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import { pure } from 'recompose'
 import moment from 'moment'
@@ -11,6 +12,8 @@ import { getWeekNumber } from '../../helpers/utils'
 import '../../App.css'
 
 const LifeCalendar = ({ birthdate, events, showEvent }) => {
+
+  console.log(' ***** life calendar - render ***** ')
 
   const [displayLayer, setDisplayLayer] = useState(null)
   const [dates, setDates] = useState([])
@@ -27,11 +30,11 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
 
   const daysPerSquare = Math.floor(365/squaresPerRow)
 
-  const nowDate = moment.utc()
-  const weekNewYear = (53 - getWeekNumber(birthdate)[1]) % 52
 
   const config = {squareSize, squareMargin, paddingMinorHorizontal}
 
+  const nowDate = moment.utc()
+  const weekNewYear = (53 - getWeekNumber(new Date(birthdate))[1]) % 52
   // this would be the place to centralize a useReducer redux style state
 
   // TODO refactor this to work not just for weeks! 
@@ -39,7 +42,7 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
   // create the dates array
 
   useEffect(() => {
-    const defaultBirthdate = birthdate.toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+    const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
     console.log(defaultBirthdate)
 
     const datesArray = range(squaresPerRow * rows).map((n, i)=> {
@@ -68,7 +71,7 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         data: {
           events: eventsData.filter(event => event.type === 'event'),
           homes: eventsData.filter(event => event.type === 'home'),
-          schools: eventsData.filter(event => event.type === 'School'), 
+          schools: eventsData.filter(event => event.layerName === 'School'), 
         },
         eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
       }
@@ -78,7 +81,11 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         id: `${obj.row}-${obj.column}`,
       }
     })
-    setDates(datesArray)
+
+    if (!_.isEqual(datesArray, dates)) {
+      setDates(datesArray)
+    }
+
   }, [events, birthdate])
 
 	return (
@@ -94,12 +101,16 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         >
           Your Life Calendar
         </text>
-				<LifeGrid 
+        <LifeGrid 
 					dates={ dates }
 					config={ config }
 					birthdate={ birthdate }
           weekNewYear={ weekNewYear }
 				/>
+        
+				
+
+
         { /* <LifeLayer
           dates={ dates.slice(200,230) }
           config={ {squareSize, squareMargin, weekNewYear, paddingMinorHorizontal} }
@@ -127,10 +138,20 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
           </text>
         </LifeLayer>
         */ }
-    {
+    { /*
       events.length > 0
       ? (
         <React.Fragment>
+        <path 
+          d={`M0 0 
+              H ${52 * (squareSize + squareMargin) + paddingMinorHorizontal} 
+              V ${3 * (squareSize + squareMargin)} 
+              H ${30 * (squareSize + squareMargin) + paddingMinorHorizontal} 
+              V ${4 * (squareSize + squareMargin)} 
+              H ${0 * (squareSize + squareMargin)} 
+              Z`} 
+          style={{fill: "rgba(100,170,180,0.3)", pointerEvents: "none"}}
+        />
         <text 
           transform={`translate(0,-10)`}
           onMouseEnter={ () => setDisplayLayer(1)} 
@@ -225,14 +246,14 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         </React.Fragment>
         )
         : null
-      }
+      )*/}
 			</g>
 		</svg>
 	)
 }
 
 LifeCalendar.propTypes = {
-  birthdate: PropTypes.instanceOf(Date),
+  birthdate: PropTypes.string,
   events: PropTypes.array,
 }
 
@@ -241,4 +262,7 @@ LifeCalendar.defaultProps = {
   events: []
 }
 
-export default LifeCalendar;
+LifeCalendar.whyDidYouRender = true
+
+export default pure(LifeCalendar)
+

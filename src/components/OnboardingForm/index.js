@@ -5,14 +5,12 @@ import { compose } from 'recompose'
 
 import { withFirebase } from '../Firebase'
 import { AuthUserContext } from '../Session'
-import { Form, FormSection, FormInput, FormSubmit } from '../FormElements'
 import FormSteps from './FormSteps'
 import BirthdateForm, { BirthdateFormConfirmation } from './BirthdateForm'
 import LayerForm from './LayerForm'
 import FinishOnboarding from './FinishOnboarding'
 import EventForm from '../EventForm'
 
-import * as ROUTES from '../../helpers/routes'
 
 
 const OnboardingFormBase = props => {
@@ -49,24 +47,26 @@ const OnboardingFormBase = props => {
 							<button className={`${currentIndex===formSteps ? "o-0" : ""} dib b ph2 pv1 mh1 input-reset ba b--black bg-transparent f6 pointer grow`} onClick={ incrementIndex }>➡</button>
 						</div>
 
-						<BirthdateForm authUser={ authUser } firebase={ props.firebase } visible={ currentIndex === 1 } />
-						<BirthdateFormConfirmation visible={ currentIndex === 1 && authUser.birthdate } next={ incrementIndex } />
-						<LayerForm authUser={ authUser } firebase={ props.firebase } visible={ currentIndex === 2 } next={ incrementIndex } />
-						{ currentIndex === 3 
-							? <div>
+						{ currentIndex === 1 && <BirthdateForm firebase={ props.firebase } visible={ currentIndex === 1 } /> }
+						{ currentIndex === 1 && authUser.birthdate && <BirthdateFormConfirmation visible next={ incrementIndex } /> }
+						{ currentIndex === 2 && <LayerForm firebase={ props.firebase } visible next={ incrementIndex } /> }
+						{ currentIndex === 3 && 
+							<div>
 								<p></p>
 								<EventForm 
 									initialName='Started building my life calendar!'
 									initialStartDate={ moment().format("YYYY-MM-DD") }
 									initialEmoji='🚀'
 								/>
-							  </div>
-							: null 
+							</div>
 						}
-						<div style={{display: currentIndex===formSteps ? "block" : "none"}}>
-							That's it for now!
-							<FinishOnboarding onClick={ handleCompletion }/> 
-						</div>
+						{ currentIndex===formSteps && (
+							<div>
+								That's it for now!
+								<FinishOnboarding onClick={ handleCompletion }/> 
+							</div>
+							)
+						}
 					</div>
 				)
 			}}
