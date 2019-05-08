@@ -19,8 +19,6 @@ const withAuthentication = Component => {
 		    )
 		    return listener
 		}, []) // TODO I don't think the empty array is correct here - but don't know what state/props to include either
-
-		console.log(authUser)
 		
 		return (
 			<AuthUserContext.Provider value={ authUser }>

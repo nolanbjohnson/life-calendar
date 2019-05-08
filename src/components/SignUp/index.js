@@ -124,17 +124,16 @@ const SignUpFormBase = (props) => {
           value={passwordConfirmation}
           onChange={e => setPasswordConfirmation(e.target.value)}
         />
-        <FormLabel 
-          htmlFor="isAdmin"
-        >
-          Admin Priviledges
-        </FormLabel>
+        <FormLabel>
+          Admin
         <input 
           name="isAdmin" 
           type="checkbox" 
           checked={isAdmin}
           onChange={e => setIsAdmin(e.target.checked)}
+          className="mh1"
         />
+        </FormLabel>
       </FormSection>
       <FormSubmit 
         type="submit" 

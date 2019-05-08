@@ -20,10 +20,10 @@ const App = props => {
 	return (
   		<Router>
          <div className="min-vh-100">
-           <header className="z-3 bg-white top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
+           <header className="z-3 bg-black-90 top-0 bb b--white relative"> {/*style={{ display: "grid", gridTemplateColumns: "1fr 10fr", justifyContent: "space-evenly" }}>*/}
              <Navigation/>
            </header>
-           <div style={{flex: "1 1 0%"}}>
+           <div style={{flex: "1 1 0%"}} className="pt4">
              <Switch>
 
                <Route path={ ROUTES.HOME } exact render={() => (

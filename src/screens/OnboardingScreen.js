@@ -46,7 +46,7 @@ const Onboarding = (props) => {
 		    	</div>
 		    	<div className="center">
 		    		<LifeCalendar 
-		    			{ ...(authUser.birthdate && { birthdate: new Date(authUser.birthdate) }) }
+		    			{ ...(authUser.birthdate && { birthdate: authUser.birthdate }) }
 		    			events={events}
 		    		/>
 		    	</div>

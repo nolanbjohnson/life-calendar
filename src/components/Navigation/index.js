@@ -22,11 +22,12 @@ const UserNavigation = styled.ul.attrs({
 	className: 'flex items-center list ph2 pv2 ma0'
 })``
 
-const NavItem = styled.li`
-`
+const NavItem = styled.li.attrs({
+	className: "white"
+})``
 
 const NavLink = styled(Link).attrs(({ primary, tight }) => ({
-	className: `nowrap tc no-underline hover-dark-blue ${tight ? "mr1 pa1" : "mr3 pa2"} ${primary ? "black f3 fw8" : "blue f6 fw6"}`
+	className: `nowrap tc no-underline hover-blue ${tight ? "mr1 pa1" : "mr3 pa2"} ${primary ? "white f3 fw8" : "white f5 fw6"}`
 }))``
 
 const Navigation = (props) => {
@@ -42,7 +43,7 @@ const Navigation = (props) => {
 				</NavLink>
 				<NavItem>
 					<NavLink to={ROUTES.LANDING} primary={"true"}>
-						Life Calendar		
+						Life Calendar
 					</NavLink>
 				</NavItem>
 				{ authUser && authUser.onboardingCompleted
@@ -71,8 +72,8 @@ const Navigation = (props) => {
 				{ 
 				authUser
 				? <NavItem>
-					{ authUser.roles[ROLES.ADMIN] ? <strong>^</strong> : null}
 					<strong>{`Hi, ${ authUser.username }`}</strong>
+					{ authUser.roles[ROLES.ADMIN] ? <strong>^</strong> : null}
 					<SignOut />
 				  </NavItem>
 

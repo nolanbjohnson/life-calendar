@@ -43,7 +43,6 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
 
   useEffect(() => {
     const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
-    console.log(defaultBirthdate)
 
     const datesArray = range(squaresPerRow * rows).map((n, i)=> {
       // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
@@ -258,7 +257,7 @@ LifeCalendar.propTypes = {
 }
 
 LifeCalendar.defaultProps = {
-  birthdate: new Date(Date.UTC(new Date().getFullYear(),0,1)),
+  birthdate: new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString().replace(/T.*/,""),
   events: []
 }
 
