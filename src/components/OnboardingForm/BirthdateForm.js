@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 
-import { AuthUserContext } from '../Session'
-import { Form, FormSection } from '../FormElements'
+import { AuthUserContext } from '../../providers/Session'
+import { Form } from '../Utilities'
 
 const BirthdateForm = props => {
 	const authUser = useContext(AuthUserContext)
@@ -26,8 +26,8 @@ const BirthdateForm = props => {
 	}
 
 	return (
-		<Form onSubmit={ event => handleSubmit(authUser, event, birthdate) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
-			<FormSection>
+		<Form.Form onSubmit={ event => handleSubmit(authUser, event, birthdate) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
+			<Form.Section>
 				<label className="f6 b db mb2 tl">
 					We'll start with something simple - your birthdate!
 				<input 
@@ -38,10 +38,10 @@ const BirthdateForm = props => {
 					onChange={e => setBirthdate(e.target.value)}
 				/>
 				</label>
-			</FormSection>
+			</Form.Section>
 			<button type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-blue white f4 pointer grow`} ><span role="img" aria-label="party popper">🎉</span> Add Your Birthdate <span role="img" aria-label="party popper">🎉</span></button>
 			<small>This will be the first box in your life calendar</small>
-		</Form>
+		</Form.Form>
 	)
 }
 
@@ -50,7 +50,7 @@ const BirthdateFormConfirmation = props => (
 		<p>Great!</p>
 	  	<p>
 	  		Now the top-leftmost box represents your birth and the square with the blue outline represents this week. 
-	  		There's also a column of space that represents the New Year, unless you're among the <a href="https://github.com/fivethirtyeight/data/tree/master/births" target="_blank" rel="noopener noreferrer">1.5% of people</a> born in the first week of the year. 
+	  		There's also a column of space that represents the New Year, unless you're among the <a href="https://github.com/fivethirtyeight/data/tree/master/births" target="_blank" rel="noopener noreferrer" className="link dim blue">1.5% of people</a> born in the first week of the year. 
 	  	</p>
 	  	<button type="button" className={`di b ph2 pv1 mh1 input-reset bn bg-transparent f4 pointer grow-large`} onClick={ props.next }>Got it? <span role="img" aria-label="thumbs up">👍</span></button>
 	</div>

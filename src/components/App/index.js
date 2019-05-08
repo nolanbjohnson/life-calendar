@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
-import { withAuthentication, AuthUserContext } from '../Session'
+import { withAuthentication, AuthUserContext } from '../../providers/Session'
 
 import Navigation from '../Navigation'
 import LifeGridScreen from '../../views/LifeGridScreen'

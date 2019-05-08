@@ -1,5 +1,5 @@
 import React from 'react'
-import Placeholder from '../components/Placeholder'
+import { Placeholder } from '../components/Utilities'
 
 const homes = [
 		{startDate: new Date('1985-11-03'), endDate: new Date('1991-05-01'), name: 'Canada', location: {lat: 52.136172, lon: -106.729138}},
@@ -21,7 +21,9 @@ const events = [
 
 const LifeEventsScreen = (props) => {
 	return (
-		<Placeholder title="Container">
+		<Placeholder title="Life Events">
+			<p className="f1 measure lh-title"><span role="img" aria-label="under construction">👷</span> This page is under construction <span role="img" aria-label="under construction">🚧</span></p>
+			<p>In the future, you'll be able to view and manage all your life events here!</p>
 			<div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", height: "65vh"}}>
 				<Placeholder title="Homes" props={homes} addStyle={{maxWidth: "30vw"}}>
 				</Placeholder>

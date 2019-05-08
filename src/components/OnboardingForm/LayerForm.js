@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import moment from 'moment'
 import styled from 'styled-components'
 
-import { AuthUserContext } from '../Session'
+import { AuthUserContext } from '../../providers/Session'
 
-import { Form, FormSection, FormInput } from '../FormElements'
+import { Form } from '../Utilities'
 
 const templateSchoolLayer = [
 	{ name: "Kindergarten", startAge: 5, endAge: 6},
@@ -18,7 +18,7 @@ const Button = styled.button.attrs(({ showOnHover }) => ({
 }))``
 
 const LayerItem = ({part, index, onChange, children}) => (
-	<FormSection
+	<Form.Section
 		key={index}
 		className="flex items-baseline justify-between mv1 db"
 	>	
@@ -47,7 +47,7 @@ const LayerItem = ({part, index, onChange, children}) => (
 			onChange={e => onChange(e,index)}
 		/>
 		{ children }
-	</FormSection>
+	</Form.Section>
 )
 
 const LayerForm = props => {
@@ -117,20 +117,20 @@ const LayerForm = props => {
 
 	if (!props.visible) return null
 	return (
-		<Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
+		<Form.Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
 			<p>Next let's add some details about you in the form of a Life Layer.</p>
-			<FormSection>
+			<Form.Section>
 			<label htmlFor="layer" className="f6 b db mb2 tl">
 				Layer Name
 			</label>
-			<FormInput 
+			<Form.Input 
 				name="layerName" 
 				type="text"
 				value={layerName}
 				onChange={e => setLayerName(e.target.value)}
 			/>
 			<small><span role="img" aria-label="point up">👆</span> you can change the name of the layer</small>
-			</FormSection>
+			</Form.Section>
 			<section className="mv3 mh1 flex flex-column">
 				<ul className="pa1 ma1 w-100 flex justify-around">
 					<li className="list"><small>Name</small></li>
@@ -158,7 +158,7 @@ const LayerForm = props => {
 			</section>
 			<button type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-green white f4 pointer grow`} ><span role="img" aria-label="backpack">🎒</span> Add the Layer <span role="img" aria-label="backpack">🎒</span></button>
 			<small>Layers represent the background color of your life grid - they shouldn't overlap</small>
-		</Form>
+		</Form.Form>
 	)
 }
 

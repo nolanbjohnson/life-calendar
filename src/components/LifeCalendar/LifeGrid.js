@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import LifeBox from './LifeBox'
 
 const LifeGrid = ({ dates, birthdate, config, weekNewYear }) => {
@@ -48,7 +49,7 @@ const LifeGrid = ({ dates, birthdate, config, weekNewYear }) => {
 	              				? date.data.schools[0].name 
 	              				: '' }
 	              	hasEvent={ date.data.events.length > 0 
-	              				? `${new Date(date.startDate).toLocaleDateString()}: ${date.data.events[0].emoji || ''} ${date.data.events[0].name}` 
+	              				? `${moment.utc(date.startDate).format("MMM DD, YYYY")}: ${date.data.events[0].emoji || ''} ${date.data.events[0].name}` 
 	              				: '' }
 	              > 
 	              </LifeBox>

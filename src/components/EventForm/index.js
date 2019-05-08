@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { withFirebase } from '../Firebase'
-import { AuthUserContext } from '../Session'
+import { withFirebase } from '../../providers/Firebase'
+import { AuthUserContext } from '../../providers/Session'
 
 import moment from 'moment'
-import { Form, FormSection, FormLabel, FormInput, FormTextArea, FormSubmit } from '../FormElements'
+import { Form } from '../Utilities'
 
 const EventForm = props => {
 
@@ -60,9 +60,9 @@ const EventForm = props => {
 	}
 
 	return (
-		<Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto" }}>
-			<FormSection>
-				<FormLabel>
+		<Form.Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto" }}>
+			<Form.Section>
+				<Form.Label>
 					<span 
 						role="img" 
 						aria-label="Set Start to Today" 
@@ -71,18 +71,18 @@ const EventForm = props => {
 						📅
 					</span>
 					{ `${ rangeMode ? "Start " : "" }Date` }
-					<FormInput 
+					<Form.Input 
 						name="startDate" 
 						type="date" 
 						value={startDate}
 						onChange={e => setStartDate(e.target.value)}
 					/>
-				</FormLabel>
+				</Form.Label>
 				{
 					rangeMode
 					? (
 						<React.Fragment>
-						<FormLabel>
+						<Form.Label>
 							<span 
 								role="img" 
 								aria-label="Set End to Today" 
@@ -91,36 +91,36 @@ const EventForm = props => {
 								📅
 							</span>
 							End Date
-							<FormInput 
+							<Form.Input 
 								name="endDate" 
 								type="date" 
 								value={endDate}
 								onChange={e => setEndDate(e.target.value)}
 							/>
-						</FormLabel>
+						</Form.Label>
 						</React.Fragment>
 					  )
 					: null
 				}
-				<FormLabel>
+				<Form.Label>
 					Event Name / Description
-					<FormTextArea 
+					<Form.TextArea 
 						name="name" 
 						type="text" 
 						value={name} 
 						onChange={e => setName(e.target.value)}
 					/>
-				</FormLabel>
-				<FormLabel>
+				</Form.Label>
+				<Form.Label>
 					Emoji <span className="normal black-60">(optional)</span>
-					<FormInput 
+					<Form.Input 
 						name="emoji" 
 						type="text" 
 						value={emoji} 
 						onChange={e => setEmoji(e.target.value)} 
 					/>
-				</FormLabel>
-				<FormLabel>
+				</Form.Label>
+				<Form.Label>
 					<input 
 						name="hidden" 
 						type="checkbox"
@@ -128,14 +128,14 @@ const EventForm = props => {
 						onChange={e => setHidden(e.target.checked)}
 					/>
 					<span> Hidden</span>
-				</FormLabel>
+				</Form.Label>
 				<input name="type" type="text" value={eventType} readOnly style={{display: "none"}}/>
-			</FormSection>
-			<FormSubmit 
+			</Form.Section>
+			<Form.Submit 
 				type="submit" 
 				value="Add Event"
 			/>
-		</Form>
+		</Form.Form>
 	)
 
 }

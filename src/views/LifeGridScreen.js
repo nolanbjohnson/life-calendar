@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import _ from 'lodash'
 
-import { withFirebase } from '../components/Firebase'
-import { AuthUserContext } from '../components/Session'
+import { withFirebase } from '../providers/Firebase'
+import { AuthUserContext } from '../providers/Session'
 import LifeCalendar from '../components/LifeCalendar'
 import EventList from '../components/EventList'
 import EventForm from '../components/EventForm/'

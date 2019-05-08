@@ -3,9 +3,9 @@ import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
 import { SignUpLink } from '../SignUp'
-import { withFirebase } from '../Firebase'
-import { AuthUserContext } from '../Session'
-import { Form, FormSection, FormLabel, FormInput, FormSubmit } from '../FormElements'
+import { withFirebase } from '../../providers/Firebase'
+import { AuthUserContext } from '../../providers/Session'
+import { Form } from '../Utilities'
 import * as ROUTES from '../../helpers/routes'
 
 const SignInPage = () => (
@@ -49,39 +49,39 @@ const SignInFormBase = (props) => {
   const isInvalid = password === '' || email === '';
 
   return (
-    <Form onSubmit={ onSubmit } style={{ overflow: "auto" }}>
-      <FormSection>
-        <FormLabel 
+    <Form.Form onSubmit={ onSubmit } style={{ overflow: "auto" }}>
+      <Form.Section>
+        <Form.Label 
           htmlFor="email"
         >
           Email
-        </FormLabel>
-        <FormInput 
+        </Form.Label>
+        <Form.Input 
           name="email" 
           type="text" 
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
 
-        <FormLabel 
+        <Form.Label 
           htmlFor="password"
         >
           Password
-        </FormLabel>
-        <FormInput 
+        </Form.Label>
+        <Form.Input 
           name="password" 
           type="password" 
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-      </FormSection>
-      <FormSubmit 
+      </Form.Section>
+      <Form.Submit 
         type="submit" 
         value="Submit"
         disabled={isInvalid}
       />
       {error && <p>{error.message}</p>}
-    </Form>
+    </Form.Form>
   )
 }
 

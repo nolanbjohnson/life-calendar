@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 
-import { withAuthorization, AuthUserContext } from '../components/Session'
+import { withAuthorization, AuthUserContext } from '../providers/Session'
 import OnboardingForm from '../components/OnboardingForm'
 import LifeCalendar from '../components/LifeCalendar'
 

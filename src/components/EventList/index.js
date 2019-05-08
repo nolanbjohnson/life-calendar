@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 
-import { withFirebase } from '../Firebase'
-import { AuthUserContext } from '../Session'
+import { withFirebase } from '../../providers/Firebase'
+import { AuthUserContext } from '../../providers/Session'
 import DatePicker from '../DatePicker/'
 import EventForm from '../EventForm'
 

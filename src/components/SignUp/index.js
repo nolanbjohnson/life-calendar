@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose'
 
-import { withFirebase } from '../Firebase';
-import { Form, FormSection, FormLabel, FormInput, FormSubmit } from '../FormElements'
+import { withFirebase } from '../../providers/Firebase';
+import { Form, FormSection, FormLabel, FormInput, FormSubmit } from '../Utilities'
 
 import * as ROUTES from '../../helpers/routes';
 import * as ROLES from '../../helpers/roles';
@@ -76,55 +76,55 @@ const SignUpFormBase = (props) => {
         username === ''
 
   return (
-    <Form onSubmit={ onSubmit } style={{ overflow: "auto" }}>
-      <FormSection>
-        <FormLabel 
+    <Form.Form onSubmit={ onSubmit } style={{ overflow: "auto" }}>
+      <Form.Section>
+        <Form.Label 
           htmlFor="username"
         >
           User Name
-        </FormLabel>
-        <FormInput 
+        </Form.Label>
+        <Form.Input 
           name="username" 
           type="text" 
           value={username}
           onChange={e => setUsername(e.target.value)}
         />
 
-        <FormLabel 
+        <Form.Label 
           htmlFor="email"
         >
           Email
-        </FormLabel>
-        <FormInput 
+        </Form.Label>
+        <Form.Input 
           name="email" 
           type="text" 
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
 
-        <FormLabel 
+        <Form.Label 
           htmlFor="password"
         >
           Password
-        </FormLabel>
-        <FormInput 
+        </Form.Label>
+        <Form.Input 
           name="password" 
           type="password" 
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <FormLabel 
+        <Form.Label 
           htmlFor="passwordConfirmation"
         >
           Password Confirmation
-        </FormLabel>
-        <FormInput 
+        </Form.Label>
+        <Form.Input 
           name="passwordConfirmation" 
           type="password" 
           value={passwordConfirmation}
           onChange={e => setPasswordConfirmation(e.target.value)}
         />
-        <FormLabel>
+        <Form.Label>
           Admin
         <input 
           name="isAdmin" 
@@ -133,15 +133,15 @@ const SignUpFormBase = (props) => {
           onChange={e => setIsAdmin(e.target.checked)}
           className="mh1"
         />
-        </FormLabel>
-      </FormSection>
-      <FormSubmit 
+        </Form.Label>
+      </Form.Section>
+      <Form.Submit 
         type="submit" 
         value="Submit"
         disabled={isInvalid}
       />
       {error && <p>{error.message}</p>}
-    </Form>
+    </Form.Form>
   )
 }
 

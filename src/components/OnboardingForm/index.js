@@ -3,8 +3,8 @@ import moment from 'moment'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
-import { withFirebase } from '../Firebase'
-import { AuthUserContext } from '../Session'
+import { withFirebase } from '../../providers/Firebase'
+import { AuthUserContext } from '../../providers/Session'
 import FormSteps from './FormSteps'
 import BirthdateForm, { BirthdateFormConfirmation } from './BirthdateForm'
 import LayerForm from './LayerForm'
@@ -52,7 +52,8 @@ const OnboardingFormBase = props => {
 						{ currentIndex === 2 && <LayerForm firebase={ props.firebase } visible next={ incrementIndex } /> }
 						{ currentIndex === 3 && 
 							<div>
-								<p></p>
+								<p>You're almost done! Add a few specific milestones.</p>
+								<p>You can continue adding milestones and events. When you're done click next to finish up.</p>
 								<EventForm 
 									initialName='Started building my life calendar!'
 									initialStartDate={ moment().format("YYYY-MM-DD") }
@@ -62,8 +63,8 @@ const OnboardingFormBase = props => {
 						}
 						{ currentIndex===formSteps && (
 							<div>
-								That's it for now!
-								<FinishOnboarding onClick={ handleCompletion }/> 
+								<p>That's it for now; click "Finish Onboarding" and go to your new homepage.</p>
+								<FinishOnboarding onClick={ handleCompletion }/>
 							</div>
 							)
 						}

@@ -4,7 +4,7 @@ import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
-import Firebase, { FirebaseContext } from './components/Firebase';
+import Firebase, { FirebaseContext } from './providers/Firebase';
 
 if (process.env.NODE_ENV !== 'production') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
