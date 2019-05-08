@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { withAuthentication, AuthUserContext } from '../Session'
 
 import Navigation from '../Navigation'
-import LifeGridScreen from '../../screens/LifeGridScreen'
-import LifeEventsScreen from '../../screens/LifeEventsScreen'
-import OnboardingScreen from '../../screens/OnboardingScreen'
-import PublicHomePage from '../../screens/PublicHomePage'
+import LifeGridScreen from '../../views/LifeGridScreen'
+import LifeEventsScreen from '../../views/LifeEventsScreen'
+import OnboardingScreen from '../../views/OnboardingScreen'
+import PublicHomePage from '../../views/PublicHomePage'
 import SignUp from '../SignUp'
 import SignIn from '../SignIn'
 

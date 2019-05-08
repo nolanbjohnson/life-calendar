@@ -11,12 +11,33 @@ import LifeLayer from './LifeLayer'
 import { getWeekNumber } from '../../helpers/utils'
 import '../../App.css'
 
+const eventWithinDateRange = (eventStart, eventEnd, dateStart, dateEnd, rangeTypeEvent) => {
+  // console.log(eventStart, eventEnd, dateStart, dateEnd, rangeTypeEvent)
+  if (eventStart >= dateEnd) return false // always outside
+
+  const beganBefore = eventStart <= dateStart
+  const endsAfter = eventEnd >= dateEnd
+  const nowIsAfter = new Date() >= dateEnd
+
+  const beganDuring = eventStart >= dateStart && eventStart <= dateEnd // always include
+  const endsDuring = eventEnd >= dateStart && eventEnd <= dateEnd // always include
+
+  if (beganDuring || endsDuring) return true // this is always within
+
+  if (rangeTypeEvent && !dateEnd) {
+    return beganBefore && (endsAfter || nowIsAfter) // assume end date is current date when not specified
+  } else {
+    return beganBefore && endsAfter
+  }
+}
+
 const LifeCalendar = ({ birthdate, events, showEvent }) => {
 
   console.log(' ***** life calendar - render ***** ')
 
   const [displayLayer, setDisplayLayer] = useState(null)
   const [dates, setDates] = useState([])
+  const [highlightDate, setHighlightDate] = useState([])
 
   // configuration
   const margin = { top: 50, right: 50, bottom: 50, left: 50 }
@@ -29,7 +50,6 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
   const height = rows * (squareSize + squareMargin)
 
   const daysPerSquare = Math.floor(365/squaresPerRow)
-
 
   const config = {squareSize, squareMargin, paddingMinorHorizontal}
 
@@ -52,12 +72,7 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
       const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
       const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
 
-      const eventsData = events.filter(event =>
-                                        (
-                                          (moment.utc(event.startDate) <= startDate && moment.utc(event.endDate || nowDate) >= moment.utc(startDate)) ||
-                                          (moment.utc(event.startDate) >= startDate && moment.utc(event.startDate) <= moment.utc(endDate))
-                                        ))
-
+      const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), new Date(event.endDate), startDate, endDate, !event.type==='event'))
 
       const obj = {
         startDate: startDate.format("YYYY-MM-DD"),
@@ -86,6 +101,14 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
     }
 
   }, [events, birthdate])
+
+  useEffect(() => {
+    if (showEvent) {
+      setHighlightDate(Array(dates.find(date => date.eventIds.indexOf(showEvent.uid) !== -1)))
+    } else {
+      setHighlightDate([])
+    }
+  }, [showEvent])
 
 	return (
 		<svg 
@@ -227,9 +250,13 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
           >
           </rect>
         </LifeLayer>
+          </React.Fragment>
+        )
+        : null
+      )*/}
         { showEvent 
           ? <LifeLayer
-              dates={ Array(dates.find(date => date.eventIds.indexOf(showEvent.id) !== -1)) || [] }
+              dates={ highlightDate }
               config={ {squareSize, squareMargin, weekNewYear, paddingMinorHorizontal} }
             >
               <rect
@@ -242,10 +269,8 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
             </LifeLayer>
           : null
         }
-        </React.Fragment>
-        )
-        : null
-      )*/}
+        
+      
 			</g>
 		</svg>
 	)

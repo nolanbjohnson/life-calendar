@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import _ from 'lodash'
 
 import { withFirebase } from '../components/Firebase'
 import { AuthUserContext } from '../components/Session'
@@ -12,6 +13,13 @@ const LifeGridScreen = props => {
 
 	const [events, setEvents] = useState([])
 	const [showEvent, setShowEvent] = useState(null) 
+
+	const handleEventHover = event => {
+		console.log('** handleEventHover **')
+		setShowEvent(event)
+	}
+
+	const handleEventHoverThrottled = _.throttle(handleEventHover, 1000, {leading: true})
 
 	useEffect(() => {
 		const eventsRef = props.firebase.userEvents(authUser.uid)
@@ -34,15 +42,15 @@ const LifeGridScreen = props => {
 
 	return (
 		<div className="w-100 mw8 ph3 center">
-			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr minmax(30%,300px)", gridGap: "1rem"}}>
+			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridGap: "1rem"}}>
 				<LifeCalendar 
 					birthdate={ authUser.birthdate }
-					events={events}
-					showEvent={showEvent}
+					events={ events }
+					showEvent={ showEvent }
 				/>
-		    	<EventForm />
-				<EventList 
-					showEvent={(event) => setShowEvent(event)}
+				<EventList
+					events={ events }
+					showEvent={ handleEventHoverThrottled }
 				/>
 			</div>
 		</div>

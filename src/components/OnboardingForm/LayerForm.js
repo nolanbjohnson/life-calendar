@@ -154,7 +154,7 @@ const LayerForm = props => {
 							</React.Fragment>
 					))
 				}
-				<button type="button" title="add a layer item" className={`self-end w2 h2 b pa2 mh1 input-reset ba b--black bg-transparent f5 pointer grow`} onClick={ addLayer }><span role="img" aria-label="add layer item">➕</span></button>
+				<button type="button" title="add a layer item" className={`self-end w2 h2 b pv2 tc mh1 input-reset ba b--black bg-transparent f5 pointer grow`} onClick={ addLayer }><span role="img" aria-label="add layer item">➕</span></button>
 			</section>
 			<button type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-green white f4 pointer grow`} ><span role="img" aria-label="backpack">🎒</span> Add the Layer <span role="img" aria-label="backpack">🎒</span></button>
 			<small>Layers represent the background color of your life grid - they shouldn't overlap</small>

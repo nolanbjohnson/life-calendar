@@ -50,7 +50,7 @@ const BirthdateFormConfirmation = props => (
 		<p>Great!</p>
 	  	<p>
 	  		Now the top-leftmost box represents your birth and the square with the blue outline represents this week. 
-	  		There's also a column of space that represents the New Year, unless you're among the <a href="https://github.com/fivethirtyeight/data/tree/master/births" target="_blank">1.5% of people</a> born in the first week of the year. 
+	  		There's also a column of space that represents the New Year, unless you're among the <a href="https://github.com/fivethirtyeight/data/tree/master/births" target="_blank" rel="noopener noreferrer">1.5% of people</a> born in the first week of the year. 
 	  	</p>
 	  	<button type="button" className={`di b ph2 pv1 mh1 input-reset bn bg-transparent f4 pointer grow-large`} onClick={ props.next }>Got it? <span role="img" aria-label="thumbs up">👍</span></button>
 	</div>

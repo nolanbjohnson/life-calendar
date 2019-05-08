@@ -44,7 +44,12 @@ const LifeGrid = ({ dates, birthdate, config, weekNewYear }) => {
 	              	title={ `${date.startDateLocaleFormat} - ${date.endDateLocaleFormat}` }
 	              	startDate={ date.startDate }
 	              	endDate={ date.endDate }
-	              	hasEvents={ date.data.schools.length > 0 ? date.data.schools[0].name : false }
+	              	hasLayer={ date.data.schools.length > 0 
+	              				? date.data.schools[0].name 
+	              				: '' }
+	              	hasEvent={ date.data.events.length > 0 
+	              				? `${new Date(date.startDate).toLocaleDateString()}: ${date.data.events[0].emoji || ''} ${date.data.events[0].name}` 
+	              				: '' }
 	              > 
 	              </LifeBox>
 	            </g>

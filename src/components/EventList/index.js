@@ -22,7 +22,7 @@ const EventListItem = ({ event, onHover, ...props }) => {
 		<EventListItemTag onMouseOver={() => onHover(event)} onMouseOut={() => onHover('')}>
 			{ props.children }
 			<DatePicker
-	          initialDate={ event.startDate.toISOString().replace(/T.*/,"") }
+	          initialDate={ new Date(event.startDate).toISOString().replace(/T.*/,"") }
 	          format="MMM DD, YYYY"
 	          editMode={ dateEditMode }
 	          closeForm={ () => setDateEditMode(false) }
@@ -50,55 +50,62 @@ const EventList = props => {
 	}
 
 	useEffect(() => {
-		const eventsRef = props.firebase.userEvents(authUser.uid)
+		if (props.events.length === 0) return
+		setEvents(props.events.filter(event=> event.type === 'event' && !event.hidden))
+		setLoading(false)
+	}, [props.events])
 
-	    eventsRef.on('value', snapshot => {
-	      let events = snapshot.val();
-	      let eventsState = [];
-	      for (let event in events) {
-	        eventsState.push({
-	          id: event,
-	          startDate: new Date(events[event].startDate),
-	          endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
-	          name: events[event].name,
-	          emoji: events[event].emoji,
-	          type: events[event].type,
-	          hidden: events[event].hidden ? true : false
-	        });
-	      }
+	// useEffect(() => {
+	// 	const eventsRef = props.firebase.userEvents(authUser.uid)
+
+	//     eventsRef.on('value', snapshot => {
+	//       let events = snapshot.val();
+	//       let eventsState = [];
+	//       for (let event in events) {
+	//         eventsState.push({
+	//           id: event,
+	//           startDate: new Date(events[event].startDate),
+	//           endDate: !isNaN(new Date(events[event].endDate)) ? new Date(events[event].endDate) : null,
+	//           name: events[event].name,
+	//           emoji: events[event].emoji,
+	//           type: events[event].type,
+	//           hidden: events[event].hidden ? true : false
+	//         });
+	//       }
 	      
-	      setEvents(eventsState.filter(event=> event.type === 'event' && !event.hidden))
-	      setLoading(false)
-	    });
+	//       setEvents(eventsState.filter(event=> event.type === 'event' && !event.hidden))
+	//       setLoading(false)
+	//     });
 
-	    return () => eventsRef.off()
-	}, [])
+	//     return () => eventsRef.off()
+	// }, [])
+	const eventListItems = events.sort((a, b) => a.startDate > b.startDate ? 1 : -1 )
+								.map(event => (
+									<EventListItem id={event.uid} key={event.uid} event={event} onHover={props.showEvent}>
+										<Button 
+											type="button" 
+											title="delete"
+											showOnHover 
+											onClick={ ()=> removeItem(event.id) }
+										>
+											✖
+										</Button>
+									</EventListItem>
+								))
 
 	return (
 		<div>
-			<h2>Events</h2>
+			<h2>
+				Events
+			<button type="button" title="add a new event" className={`w2 h2 b pv2 mh1 tc mh1 input-reset bn bg-transparent f5 pointer grow`} onClick={ () => console.log('new event') }><span role="img" aria-label="add a new event">➕</span></button>
+			</h2>
 			{
 			loading
 			? <div>Loading...</div>
 			: <ul className="pa0 pb2 overflow-x-scroll">
 				{	
 					events.length>0
-					? events
-						.sort((a, b) => a.startDate > b.startDate ? 1 : -1 )
-						.map(event => {
-						return (
-							<EventListItem event={event} key={event.id} onHover={props.showEvent}>
-								<Button 
-									type="button" 
-									title="delete"
-									showOnHover 
-									onClick={ ()=> removeItem(event.id) }
-								>
-									✖
-								</Button>
-							</EventListItem>
-						)
-					})
+					? eventListItems
 					: <li><em>No events yet</em></li>
 				}
 			</ul>

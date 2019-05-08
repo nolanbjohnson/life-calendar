@@ -13,7 +13,7 @@ import * as ROLES from '../../helpers/roles';
 
 const SignUpPage = () => (
   <div className="w-100 mw8 ph3 center">
-    <h2>SignUp</h2>
+    <h2>Sign Up</h2>
       <SignUpForm />
   </div>
 )

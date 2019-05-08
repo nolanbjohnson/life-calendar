@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import _ from 'lodash'
 import { pure } from 'recompose'
 
 const colorAssignment = {}
@@ -41,27 +42,62 @@ const randColor = (name) => {
  	return newColor
 }
 
-const LifeBoxBase = ({ squareSize, nowBox, title, hasEvents }) => {
+const LifeBoxBase = ({ squareSize, nowBox, title, hasLayer, hasEvent }) => {
 
 	const [clicked, setClicked] = useState(false)
 	const [hovered, setHovered] = useState(false)
+	const [layerName, setLayerName] = useState('')
 
-	// const nowBox = dateBetween(moment.utc(), start, moment.utc(endDate).add(1, 'd'))
+	const onHover = (layer) => {
+		// TODO throttle this or debounce - whichever means that it stays rendered longer and evaluates less often
+		
+		setHovered(true)
+		if (layer) {
+			if (layer && layer !== layerName) {
+				setLayerName(layer)
+			}
+		}
+	}
+
+
+	const offHover = () => {
+		setHovered(false)
+		setLayerName('')
+	}
+
+	const onHoverThrottled = _.debounce(onHover, 2000, {leading: true})
+	const offHoverThrottled = _.debounce(offHover, 2000, {leading: true})
+
 	return (
 		<g key={title}>
+			{ 
+				layerName 
+				? <text
+					textAnchor="middle"
+					style={{ fontSize: "1.5rem", fontWeight: "bolder", stroke: "black", strokeWidth: "1px",  fill: randColor(hasLayer) }}
+				  >{ layerName }</text>
+				: null
+			}
 			<rect width={squareSize} 
 		          height={squareSize}
 		          className="square"
 		          style={{ 
-		          			...{fill: clicked || hovered ? "steelblue" : hasEvents ? randColor(hasEvents) : "#ebedf0"},
-		          		  	...(nowBox ? { strokeWidth:  1, stroke: "steelblue" } : {})
+		          			...{fill: clicked || hovered ? "steelblue" : hasLayer ? randColor(hasLayer) : "#ebedf0"},
+		          		  	...(nowBox ? { strokeWidth:  1, stroke: "steelblue" } 
+		          		  		: hasEvent ? { strokeWidth:  1, stroke: "silver" } 
+		          		  		: {})
 		          		}}
 		          onClick={ () => setClicked(!clicked) }
-		          onMouseEnter={ () => setHovered(true) }
-		          onMouseOut={ () => setHovered(false) }
+		          onMouseEnter={ () => onHoverThrottled(hasLayer) }
+		          onMouseOut={ offHoverThrottled }
 		    >
-				<title style={{fontSize: "3em"}}>
-				  { title }
+				<title style={{fontWeight: "bolder"}}>
+				  {title}
+				  {
+				  	hasEvent 
+				  	? `\n${hasEvent}`
+				  	: ''
+				  }
 				</title>
 			</rect>
 		</g>
