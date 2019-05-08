@@ -61,7 +61,6 @@ const EventForm = props => {
 
 	return (
 		<Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto" }}>
-			<h2>New Event</h2>
 			<FormSection>
 				<FormLabel>
 					<span 

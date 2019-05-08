@@ -6,9 +6,9 @@ const colorAssignment = {}
 
 const randColor = (name) => {
 	if (colorAssignment[name]) return colorAssignment[name]
-	
+	// TODO use d3 color mapping
 	let newColor = ""
-	switch (Math.floor(Math.random() * 8)) {
+	switch (Object.keys(colorAssignment).length) {
 		case 0:
 			newColor = "rgba(155,90,90,0.5)"
 			break
@@ -84,14 +84,14 @@ const LifeBoxBase = ({ squareSize, nowBox, title, hasLayer, hasEvent }) => {
 		          style={{ 
 		          			...{fill: clicked || hovered ? "steelblue" : hasLayer ? randColor(hasLayer) : "#ebedf0"},
 		          		  	...(nowBox ? { strokeWidth:  1, stroke: "steelblue" } 
-		          		  		: hasEvent ? { strokeWidth:  1, stroke: "silver" } 
+		          		  		: hasEvent ? { strokeWidth:  1, stroke: "darkgrey" } 
 		          		  		: {})
 		          		}}
 		          onClick={ () => setClicked(!clicked) }
 		          onMouseEnter={ () => onHoverThrottled(hasLayer) }
 		          onMouseOut={ offHoverThrottled }
 		    >
-				<title style={{fontWeight: "bolder"}}>
+				<title>
 				  {title}
 				  {
 				  	hasEvent 

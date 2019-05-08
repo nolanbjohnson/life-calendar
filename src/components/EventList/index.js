@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { withFirebase } from '../Firebase'
 import { AuthUserContext } from '../Session'
 import DatePicker from '../DatePicker/'
+import EventForm from '../EventForm'
 
 
 const EventListItemTag = styled.li.attrs({
@@ -44,6 +45,7 @@ const EventList = props => {
 
 	const [events, setEvents] = useState([])
 	const [loading, setLoading] = useState(true)
+	const [showForm, setShowForm] = useState(false)
 
 	const removeItem = eventId => {
 		props.firebase.event(eventId).remove()
@@ -86,7 +88,7 @@ const EventList = props => {
 											type="button" 
 											title="delete"
 											showOnHover 
-											onClick={ ()=> removeItem(event.id) }
+											onClick={ ()=> removeItem(event.uid) }
 										>
 											✖
 										</Button>
@@ -97,7 +99,11 @@ const EventList = props => {
 		<div>
 			<h2>
 				Events
-			<button type="button" title="add a new event" className={`w2 h2 b pv2 mh1 tc mh1 input-reset bn bg-transparent f5 pointer grow`} onClick={ () => console.log('new event') }><span role="img" aria-label="add a new event">➕</span></button>
+			<button type="button" title="add a new event" className={`w2 h2 b pv2 mh1 tc mh1 input-reset bn bg-transparent f5 pointer grow`} onClick={ () => setShowForm(!showForm) }><span role="img" aria-label="add a new event">{ showForm ? "➖" : "➕" }</span></button>
+			{ showForm
+				? <EventForm />
+				: null
+			}
 			</h2>
 			{
 			loading
