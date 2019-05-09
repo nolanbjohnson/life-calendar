@@ -73,7 +73,7 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
         const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
 
-        const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), event.endDate ? new Date(event.endDate) : undefined, startDate, endDate, !(event.type && event.type==='event')))
+        const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), event.endDate ? new Date(event.endDate) : undefined, startDate, moment.utc(endDate).add(1,'d'), !(event.type && event.type==='event')))
 
         const obj = {
           startDate: startDate.format("YYYY-MM-DD"),
@@ -96,7 +96,7 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
           id: `${obj.row}-${obj.column}`,
         }
       })
-
+      console.log(datesArray)
       return datesArray
     }, [events, birthdate])
 
