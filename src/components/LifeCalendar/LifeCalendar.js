@@ -325,7 +325,7 @@ LifeCalendar.defaultProps = {
   events: []
 }
 
-// LifeCalendar.whyDidYouRender = true
+LifeCalendar.whyDidYouRender = true
 
 export default pure(LifeCalendar)
 
