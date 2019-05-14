@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import LifeBox from './LifeBox'
 
-const LifeGrid = ({ dates, birthdate, config, weekNewYear }) => {
+const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers }) => {
 	
 	const { squareSize, squareMargin, paddingMinorHorizontal } = config
 
@@ -45,8 +45,8 @@ const LifeGrid = ({ dates, birthdate, config, weekNewYear }) => {
 	              	title={ `${date.startDateLocaleFormat} - ${date.endDateLocaleFormat}` }
 	              	startDate={ date.startDate }
 	              	endDate={ date.endDate }
-	              	hasLayer={ date.data.schools.length > 0 
-	              				? date.data.schools[0].name 
+	              	hasLayer={ date.data.layers.length > 0
+	              				? (date.data.layers.find(layer => layer.hasOwnProperty('name')) || {name: ''}).name
 	              				: '' }
 	              	hasEvent={ date.data.events.length > 0 
 	              				? `${moment.utc(date.data.events[0].startDate).format("MMM DD, YYYY")}: ${date.data.events[0].emoji || ''} ${date.data.events[0].name}` 

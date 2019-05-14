@@ -55,7 +55,7 @@ const LayerForm = props => {
 
 	console.log('layerform', authUser)
 
-	const [layerName, setLayerName]	= useState('School')
+	const [layerName, setLayerName]	= useState('')
 	const [schoolLayer, setSchoolLayer] = useState([])
 	const birthdate = new Date(authUser.birthdate)
 	const birthYear = birthdate.getFullYear()
@@ -74,6 +74,7 @@ const LayerForm = props => {
 			}
 		})
 		setSchoolLayer(schoolLayer)
+		setLayerName('School')
 	}
 
 	const addLayer = () => {
@@ -105,7 +106,8 @@ const LayerForm = props => {
 			const key = eventsRef.push().key
 			newEvents[key] = {
 				...layer, 
-				layerName, 
+				layerName,
+				type: 'layer',
 				userId: authUser.uid, 
 				createdAt: props.firebase.serverValue.TIMESTAMP
 			}

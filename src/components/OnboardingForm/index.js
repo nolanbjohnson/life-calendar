@@ -7,7 +7,7 @@ import { withFirebase } from '../../providers/Firebase'
 import { AuthUserContext } from '../../providers/Session'
 import FormSteps from './FormSteps'
 import BirthdateForm, { BirthdateFormConfirmation } from './BirthdateForm'
-import LayerForm from './LayerForm'
+import LayerForm from '../LayerForm'
 import FinishOnboarding from './FinishOnboarding'
 import EventForm from '../EventForm'
 
@@ -44,7 +44,7 @@ const OnboardingFormBase = props => {
 					<div className="db">
 						<div className="h-100 flex items-end justify-end">
 							<button className={`${currentIndex===1 ? "o-0" : ""} dib b ph2 pv1 mh1 input-reset ba b--black bg-transparent f6 pointer grow`} onClick={ decrementIndex }>⬅</button>
-							<button className={`${currentIndex===formSteps ? "o-0" : ""} dib b ph2 pv1 mh1 input-reset ba b--black bg-transparent f6 pointer grow`} onClick={ incrementIndex }>➡</button>
+							<button className={`${currentIndex===formSteps ? "o-0" : ""} ${currentIndex===(formSteps - 1) ? "shadow-1" : ""} dib b ph2 pv1 mh1 input-reset ba b--black bg-transparent f6 pointer grow`} onClick={ incrementIndex }>➡</button>
 						</div>
 
 						{ currentIndex === 1 && <BirthdateForm firebase={ props.firebase } visible={ currentIndex === 1 } /> }

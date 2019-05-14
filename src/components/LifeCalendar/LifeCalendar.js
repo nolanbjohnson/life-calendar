@@ -31,13 +31,14 @@ const eventWithinDateRange = (eventStart, eventEnd, dateStart, dateEnd, rangeTyp
   }
 }
 
-const LifeCalendar = ({ birthdate, events, showEvent }) => {
+const LifeCalendar = ({ birthdate, events, showEvent, showLayers }) => {
 
   console.log(' ***** life calendar - render ***** ')
 
   const [displayLayer, setDisplayLayer] = useState(null)
-  // const [dates, setDates] = useState([])
+  const [dates, setDates] = useState([])
   const [highlightDate, setHighlightDate] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   // configuration
   const margin = { top: 50, right: 50, bottom: 50, left: 50 }
@@ -61,85 +62,91 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
 
   // create the dates array
 
-  const dates = useMemo( 
-    () => {
-      const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+  // const dates = useMemo( 
+  //   () => {
+  //     console.log(showLayers)
+  //     const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+      
+  //     const datesArray = range(squaresPerRow * rows).map((n, i)=> {
+  //       // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
+  //       // and endDate is nextStartDate - 1, which would add the extra day to the end.
+  //       // TODO also leap years...Feb 29 is an issue for the following week, which is missing a day. All this only matters if
+  //       // an event occurs on that specific date that falls between two squares
+  //       const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
+  //       const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
 
-      const datesArray = range(squaresPerRow * rows).map((n, i)=> {
-        // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
-        // and endDate is nextStartDate - 1, which would add the extra day to the end.
-        // TODO also leap years...Feb 29 is an issue for the following week, which is missing a day. All this only matters if
-        // an event occurs on that specific date that falls between two squares
-        const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
-        const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
+  //       const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), event.endDate ? new Date(event.endDate) : undefined, startDate, moment.utc(endDate).add(1,'d'), !(event.type && event.type==='event')))
 
-        const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), event.endDate ? new Date(event.endDate) : undefined, startDate, moment.utc(endDate).add(1,'d'), !(event.type && event.type==='event')))
+  //       const obj = {
+  //         startDate: startDate.format("YYYY-MM-DD"),
+  //         startDateLocaleFormat: startDate.format("M/DD/YY"),
+  //         endDate: endDate.format("YYYY-MM-DD"),
+  //         endDateLocaleFormat: endDate.format("M/DD/YY"),
+  //         row: Math.floor(i/squaresPerRow),
+  //         column: i % squaresPerRow,
+  //         current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
+  //         data: {
+  //           events: eventsData.filter(event => event.type === 'event'),
+  //           homes: eventsData.filter(event => event.type === 'home'),
+  //           [showLayers[0]]: eventsData.filter(event => event.layerName === showLayers[0]),
+  //         },
+  //         eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
+  //       }
 
-        const obj = {
-          startDate: startDate.format("YYYY-MM-DD"),
-          startDateLocaleFormat: startDate.format("M/DD/YY"),
-          endDate: endDate.format("YYYY-MM-DD"),
-          endDateLocaleFormat: endDate.format("M/DD/YY"),
-          row: Math.floor(i/squaresPerRow),
-          column: i % squaresPerRow,
-          current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
-          data: {
-            events: eventsData.filter(event => event.type === 'event'),
-            homes: eventsData.filter(event => event.type === 'home'),
-            schools: eventsData.filter(event => event.layerName === 'School'), 
-          },
-          eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
-        }
+  //       return { 
+  //         ...obj, 
+  //         id: `${obj.row}-${obj.column}`,
+  //       }
+  //     })
+  //     console.log(datesArray)
+  //     return datesArray
+  //   }, [events, showLayers, birthdate])
 
-        return { 
-          ...obj, 
-          id: `${obj.row}-${obj.column}`,
-        }
-      })
-      console.log(datesArray)
-      return datesArray
-    }, [events, birthdate])
+  useEffect(() => {
+    const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
 
-  // useEffect(() => {
-  //   const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+    const datesArray = range(squaresPerRow * rows).map((n, i)=> {
+      // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
+      // and endDate is nextStartDate - 1, which would add the extra day to the end.
+      // TODO also leap years...Feb 29 is an issue for the following week, which is missing a day. All this only matters if
+      // an event occurs on that specific date that falls between two squares
+      const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
+      const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
 
-  //   const datesArray = range(squaresPerRow * rows).map((n, i)=> {
-  //     // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
-  //     // and endDate is nextStartDate - 1, which would add the extra day to the end.
-  //     // TODO also leap years...Feb 29 is an issue for the following week, which is missing a day. All this only matters if
-  //     // an event occurs on that specific date that falls between two squares
-  //     const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
-  //     const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
+      const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), new Date(event.endDate), startDate, endDate, !event.type==='event'))
 
-  //     const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), new Date(event.endDate), startDate, endDate, !event.type==='event'))
+      const layers = showLayers.map(layer => eventsData.find(event => event.layerName === layer) || {})
 
-  //     const obj = {
-  //       startDate: startDate.format("YYYY-MM-DD"),
-  //       startDateLocaleFormat: startDate.format("M/DD/YY"),
-  //       endDate: endDate.format("YYYY-MM-DD"),
-  //       endDateLocaleFormat: endDate.format("M/DD/YY"),
-  //       row: Math.floor(i/squaresPerRow),
-  //       column: i % squaresPerRow,
-  //       current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
-  //       data: {
-  //         events: eventsData.filter(event => event.type === 'event'),
-  //         homes: eventsData.filter(event => event.type === 'home'),
-  //         schools: eventsData.filter(event => event.layerName === 'School'), 
-  //       },
-  //       eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
-  //     }
+      if (layers.length > 0 && layers[0].hasOwnProperty('name')) console.log(layers)
 
-  //     return { 
-  //       ...obj, 
-  //       id: `${obj.row}-${obj.column}`,
-  //     }
-  //   })
+      const obj = {
+        startDate: startDate.format("YYYY-MM-DD"),
+        startDateLocaleFormat: startDate.format("M/DD/YY"),
+        endDate: endDate.format("YYYY-MM-DD"),
+        endDateLocaleFormat: endDate.format("M/DD/YY"),
+        row: Math.floor(i/squaresPerRow),
+        column: i % squaresPerRow,
+        current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
+        data: {
+          events: eventsData.filter(event => event.type === 'event'),
+          homes: eventsData.filter(event => event.type === 'home'),
+          layers
+        },
+        eventIds: eventsData.filter(event => event.type === 'event').map(event => event.uid)
+      }
 
-  //   if (!_.isEqual(datesArray, dates)) {
-  //     setDates(datesArray)
-  //   }
+      return { 
+        ...obj, 
+        id: `${obj.row}-${obj.column}`,
+      }
+    })
 
-  // }, [events, birthdate])
+    if (!_.isEqual(datesArray, dates)) {
+      setDates(datesArray)
+      setIsLoading(false)
+    }
+
+  }, [events, showLayers, birthdate])
 
   useEffect(() => {
     if (showEvent) {
@@ -162,12 +169,16 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
         >
           Your Life Calendar
         </text>
-        <LifeGrid 
-					dates={ dates }
-					config={ config }
-					birthdate={ birthdate }
-          weekNewYear={ weekNewYear }
-				/>
+
+        {
+          !isLoading && <LifeGrid 
+  					dates={ dates }
+  					config={ config }
+  					birthdate={ birthdate }
+            weekNewYear={ weekNewYear }
+            showLayers={ showLayers }
+				  />
+        }
         
 				
 
@@ -318,11 +329,13 @@ const LifeCalendar = ({ birthdate, events, showEvent }) => {
 LifeCalendar.propTypes = {
   birthdate: PropTypes.string,
   events: PropTypes.array,
+  showLayers: PropTypes.array,
 }
 
 LifeCalendar.defaultProps = {
   birthdate: new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString().replace(/T.*/,""),
-  events: []
+  events: [],
+  showLayers: [],
 }
 
 LifeCalendar.whyDidYouRender = true

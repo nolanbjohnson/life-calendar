@@ -42,9 +42,7 @@ const EventListItem = ({ event, onHover, ...props }) => {
 const EventList = props => {
 
 	const authUser = useContext(AuthUserContext)
-
 	const [events, setEvents] = useState([])
-	const [loading, setLoading] = useState(true)
 	const [showForm, setShowForm] = useState(false)
 
 	const removeItem = eventId => {
@@ -54,7 +52,6 @@ const EventList = props => {
 	useEffect(() => {
 		if (props.events.length === 0) return
 		setEvents(props.events.filter(event=> event.type === 'event' && !event.hidden))
-		setLoading(false)
 	}, [props.events])
 
 	// useEffect(() => {
@@ -106,7 +103,7 @@ const EventList = props => {
 			}
 			</h2>
 			{
-			loading
+			props.loading
 			? <div>Loading...</div>
 			: <ul className="pa0 pb2 overflow-x-scroll">
 				{	

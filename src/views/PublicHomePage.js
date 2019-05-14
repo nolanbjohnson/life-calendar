@@ -40,8 +40,8 @@ const PublicHomePage = props => (
 		   	<div className="measure pa2 f5 flex self-end">
 		   		<img height={320} className="ma2 mt4" alt="life calendar" src={LifeCalendarWBWGIF} />
 		   		<div className="ma1 mt4 flex flex-column">
-		   			<small className="ma0 tc b navy">My IRL Life Calendar</small>
-		   			<img height={275} width={170} className="ma2 mt3" alt="life calendar" src={LifeCalendarIRL} />
+		   			<small className="ma0 tc b" style={{color: "#020080"}}>My IRL Life Calendar</small>
+		   			<img height={275} className="ma2 mt3" alt="life calendar" src={LifeCalendarIRL} />
 		   		</div>
 		   	</div>
 		   	<div className="w-100 flex justify-center ba b--near-white">
