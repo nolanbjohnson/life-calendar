@@ -21,7 +21,7 @@ const LifeGridScreen = props => {
 	const [showEvent, setShowEvent] = useState(null)
 	const [loading, setLoading] = useState(true)
 	const [layerNames, setLayerNames] = useState([])
-	const [layerNamesSelected, setLayerNamesSelected] = useState(JSON.parse(localStorage.getItem(keyLocalStorageLayerOptions)) || [])
+	const [layerNamesSelected, setLayerNamesSelected] = useState([])
 	const [optionNamesSelected, setOptionNamesSelected] = useState(JSON.parse(localStorage.getItem(keyLocalStorageShowOptions)) || optionNames)
 
 
@@ -65,22 +65,9 @@ const LifeGridScreen = props => {
 	}, [optionNamesSelected])
 
 	useEffect(() => {
+		if (loading) return // this was getting set to [] before layers had a chance to Load, causing the default to show no layers
 		localStorage.setItem(keyLocalStorageLayerOptions, JSON.stringify(layerNamesSelected))
 	}, [layerNamesSelected])
-
-	// const toggleLayerSelected = layer => {
-	// 	const index = layerNamesSelected.indexOf(layer)
-
-	// 	if (index === -1) {
-	// 		setLayerNamesSelected([...layerNamesSelected, layer])
-	// 	}
-	// 	else {
-	// 		setLayerNamesSelected([
-	// 			...layerNamesSelected.slice(0, index),
-	// 			...layerNamesSelected.slice(index + 1)
-	// 		])
-	// 	}
-	// }
 
 	const handleEventHoverThrottled = _.throttle(handleEventHover, 1000, {leading: true})
 

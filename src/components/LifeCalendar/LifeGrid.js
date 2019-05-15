@@ -42,7 +42,7 @@ const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers }) => {
 	              <LifeBox
 	              	squareSize={ squareSize }
 	              	nowBox={ date.current }
-	              	title={ `${date.startDateLocaleFormat} - ${date.endDateLocaleFormat}` }
+	              	title={ `${date.startDateLocaleFormat} - ${date.endDateLocaleFormat} (Age ${date.row})` }
 	              	startDate={ date.startDate }
 	              	endDate={ date.endDate }
 	              	hasLayer={ date.data.layers.length > 0
