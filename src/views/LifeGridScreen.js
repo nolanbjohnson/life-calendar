@@ -5,17 +5,25 @@ import { withFirebase } from '../providers/Firebase'
 import { AuthUserContext } from '../providers/Session'
 import LifeCalendar from '../components/LifeCalendar'
 import EventList from '../components/EventList'
-import Dropdown from '../components/Dropdown'
+import Dropdown, { Section as DropdownSection } from '../components/Dropdown'
+
+const keyLocalStorageShowOptions = 'showOptions'
+const keyLocalStorageLayerOptions = 'showLayers'
+
 
 const LifeGridScreen = props => {
 
 	const authUser = useContext(AuthUserContext)
+	const optionNames = ["Show Events", "Show Now"]
+	const [showEvents, showNow] = optionNames
 
 	const [events, setEvents] = useState([])
 	const [showEvent, setShowEvent] = useState(null)
 	const [loading, setLoading] = useState(true)
 	const [layerNames, setLayerNames] = useState([])
-	const [layerNamesSelected, setLayerNamesSelected] = useState([])
+	const [layerNamesSelected, setLayerNamesSelected] = useState(JSON.parse(localStorage.getItem(keyLocalStorageLayerOptions)) || [])
+	const [optionNamesSelected, setOptionNamesSelected] = useState(JSON.parse(localStorage.getItem(keyLocalStorageShowOptions)) || optionNames)
+
 
 	const handleEventHover = event => {
 		console.log('** handleEventHover **')
@@ -33,19 +41,46 @@ const LifeGridScreen = props => {
 		return Object.keys(layers)
 	}
 
-	const toggleLayerSelected = layer => {
-		const index = layerNamesSelected.indexOf(layer)
+	const toggleSelected = (name, state, setState) => {
+		const index = state.indexOf(name)
 
 		if (index === -1) {
-			setLayerNamesSelected([...layerNamesSelected, layer])
+			setState([...state, name])
 		}
 		else {
-			setLayerNamesSelected([
-				...layerNamesSelected.slice(0, index),
-				...layerNamesSelected.slice(index + 1)
+			setState([
+				...state.slice(0, index),
+				...state.slice(index + 1)
 			])
 		}
 	}
+
+	useEffect(() => {
+		// if layerNames changes, arbitrarily choose the first layer to show
+		setLayerNamesSelected(JSON.parse(localStorage.getItem(keyLocalStorageLayerOptions)) || layerNames.slice(0, 1))
+	}, [layerNames])
+
+	useEffect(() => {
+		localStorage.setItem(keyLocalStorageShowOptions, JSON.stringify(optionNamesSelected))
+	}, [optionNamesSelected])
+
+	useEffect(() => {
+		localStorage.setItem(keyLocalStorageLayerOptions, JSON.stringify(layerNamesSelected))
+	}, [layerNamesSelected])
+
+	// const toggleLayerSelected = layer => {
+	// 	const index = layerNamesSelected.indexOf(layer)
+
+	// 	if (index === -1) {
+	// 		setLayerNamesSelected([...layerNamesSelected, layer])
+	// 	}
+	// 	else {
+	// 		setLayerNamesSelected([
+	// 			...layerNamesSelected.slice(0, index),
+	// 			...layerNamesSelected.slice(index + 1)
+	// 		])
+	// 	}
+	// }
 
 	const handleEventHoverThrottled = _.throttle(handleEventHover, 1000, {leading: true})
 
@@ -74,11 +109,6 @@ const LifeGridScreen = props => {
 
 	}, [])
 
-	useEffect(() => {
-		// if layerNames changes, arbitrarily choose the first layer to show
-		setLayerNamesSelected(layerNames.slice(0, 1))
-	}, [layerNames])
-
 	return (
 		<div className="w-100 mw8 ph3 center">
 			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridGap: "1rem"}}>
@@ -86,17 +116,28 @@ const LifeGridScreen = props => {
 					<div className="self-end">
 						<Dropdown 
 							buttonText="..."
-							header="Layers"
-							items={ layerNames }
-							selectedItems={ layerNamesSelected }
-							toggleSelection={ toggleLayerSelected }
-						/>
+						>
+							<DropdownSection
+								header="Layers"
+								items={ layerNames }
+								selectedItems={ layerNamesSelected }
+								toggleSelection={ name => toggleSelected(name, layerNamesSelected, setLayerNamesSelected) }
+							/>
+							<DropdownSection
+								header="Events"
+								items={ optionNames }
+								selectedItems={ optionNamesSelected }
+								toggleSelection={ name => toggleSelected(name, optionNamesSelected, setOptionNamesSelected) }
+							/>
+						</Dropdown>
 					</div>
 					<LifeCalendar 
 						birthdate={ authUser.birthdate }
 						events={ events }
 						showEvent={ showEvent }
 						showLayers={ layerNamesSelected }
+						highlightEvents={ optionNamesSelected.indexOf(showEvents) !== -1 }
+						highlightNow={ optionNamesSelected.indexOf(showNow) !== -1 }
 					/>
 				</div>
 				<EventList

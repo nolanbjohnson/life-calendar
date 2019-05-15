@@ -72,7 +72,7 @@ const eventWithinDateRange = (eventStart, eventEnd, dateStart, dateEnd, rangeTyp
   }
 }
 
-const LifeCalendar = ({ birthdate, events, showEvent, showLayers }) => {
+const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvents, highlightNow }) => {
 
   console.log(' ***** life calendar - render ***** ')
 
@@ -260,6 +260,38 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers }) => {
                 </rect>
               </LifeLayer>
             ))
+          )
+       }
+
+      { 
+          highlightEvents && (
+            <LifeLayer
+              dates={ dates.filter(date => date.data.events.length > 0) }
+              config={{squareSize, squareMargin, weekNewYear, paddingMinorHorizontal}}
+            >
+              <rect
+                width={squareSize}
+                height={squareSize}
+                style={{ fill: "transparent", strokeWidth:  1, stroke: "darkgrey" }}
+              >
+              </rect>
+            </LifeLayer>
+          )
+       }
+
+      { 
+          highlightNow && (
+            <LifeLayer
+              dates={ dates.filter(date => date.current) }
+              config={{squareSize, squareMargin, weekNewYear, paddingMinorHorizontal}}
+            >
+              <rect
+                width={squareSize}
+                height={squareSize}
+                style={{ fill: "transparent", strokeWidth:  1, stroke: "steelblue" }}
+              >
+              </rect>
+            </LifeLayer>
           )
        }
 
