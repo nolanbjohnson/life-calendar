@@ -82,7 +82,8 @@ const LifeBoxBase = ({ squareSize, nowBox, title, hasLayer, hasEvent }) => {
 		          height={squareSize}
 		          className="square"
 		          style={{ 
-		          			...{fill: clicked || hovered ? "steelblue" : hasLayer ? randColor(hasLayer) : "#ebedf0"},
+		          			// ...{fill: clicked || hovered ? "steelblue" : hasLayer ? randColor(hasLayer) : "#ebedf0"},
+		          			...{fill: clicked || hovered ? "steelblue" : "#ebedf0"},
 		          		  	...(nowBox ? { strokeWidth:  1, stroke: "steelblue" } 
 		          		  		: hasEvent ? { strokeWidth:  1, stroke: "darkgrey" } 
 		          		  		: {})

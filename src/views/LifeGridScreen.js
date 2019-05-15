@@ -35,9 +35,7 @@ const LifeGridScreen = props => {
 	}
 
 	const toggleLayerSelected = layer => {
-		console.log(layerNamesSelected)
 		const index = layerNamesSelected.indexOf(layer)
-		console.log(index)
 
 		if (index === -1) {
 			setLayerNamesSelected([...layerNamesSelected, layer])

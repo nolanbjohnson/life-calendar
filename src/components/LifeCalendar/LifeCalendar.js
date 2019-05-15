@@ -11,6 +11,47 @@ import LifeLayer from './LifeLayer'
 import { getWeekNumber } from '../../helpers/utils'
 import '../../App.css'
 
+
+const colorAssignment = {}
+
+const randColor = (name) => {
+  if (colorAssignment[name]) return colorAssignment[name]
+  // TODO use d3 color mapping
+  let newColor = ""
+  switch (Object.keys(colorAssignment).length) {
+    case 0:
+      newColor = "rgba(155,90,90,0.5)"
+      break
+    case 1:
+      newColor = "rgba(90,155,90,0.5)"
+      break
+    case 2:
+      newColor = "rgba(90,90,155,0.5)"
+      break
+    case 3:
+      newColor = "rgba(155,90,155,0.5)"
+      break
+    case 4:
+      newColor = "rgba(155,155,90,0.5)"
+      break
+    case 5:
+      newColor = "rgba(90,155,155,0.5)"
+      break
+    case 6:
+      newColor = "rgba(90,90,90,0.5)"
+      break
+    case 7:
+      newColor = "rgba(30,90,155,0.5)"
+      break
+    default:
+      newColor = "#ebedf0"
+      break
+  }
+  
+  colorAssignment[name] = newColor
+  return newColor
+}
+
 const eventWithinDateRange = (eventStart, eventEnd, dateStart, dateEnd, rangeTypeEvent) => {
   // console.log(eventStart, eventEnd, dateStart, dateEnd, rangeTypeEvent)
   if (eventStart >= dateEnd) return false // always outside
@@ -117,7 +158,7 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers }) => {
 
       const layers = showLayers.map(layer => eventsData.find(event => event.layerName === layer) || {})
 
-      if (layers.length > 0 && layers[0].hasOwnProperty('name')) console.log(layers)
+      // if (layers.length > 0 && layers[0].hasOwnProperty('name')) console.log(layers)
 
       const obj = {
         startDate: startDate.format("YYYY-MM-DD"),
@@ -156,7 +197,30 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers }) => {
     }
   }, [showEvent])
 
-	return (
+  const layers = useMemo(() => {
+    // const layersObj = showLayers.map(layer => ({name: layer, dates: dates}))
+    const layers = showLayers.reduce((layers, layer) => {
+      const layerItems = events.filter(event => event.layerName === layer)
+      const layerDates = layerItems
+                            .map(layerItem => ({
+                                ...layerItem,
+                                fillColor: randColor(layerItem.name),
+                                dates: dates.filter(date => (
+                                  new Date(layerItem.startDate) <= new Date(date.endDate) 
+                                  && new Date(layerItem.endDate || nowDate) >= new Date(date.endDate)
+                                  // eventWithinDateRange(new Date(layerItem.startDate), 
+                                  //                      new Date(layerItem.endDate), 
+                                  //                      new Date(date.startDate), 
+                                  //                      new Date(date.endDate), 
+                                  //                      true)
+                                ))
+                              }))
+      return [...layers, ...layerDates]
+    }, [])
+    return layers
+  }, [showLayers, events])
+	
+  return (
 		<svg 
 			width={ width + margin.left + margin.right } 
 			height={ height + margin.top + margin.bottom }
@@ -179,8 +243,25 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers }) => {
             showLayers={ showLayers }
 				  />
         }
-        
-				
+
+        { 
+          showLayers.length > 0 && (
+            layers.map(layer => (
+              <LifeLayer
+                key={ layer.uid }
+                dates={ layer.dates }
+                config={{squareSize, squareMargin, weekNewYear, paddingMinorHorizontal}}
+              >
+                <rect
+                  width={squareSize} 
+                  height={squareSize}
+                  style={{fill: layer.fillColor, pointerEvents: "none"}}
+                >
+                </rect>
+              </LifeLayer>
+            ))
+          )
+       }
 
 
         { /* <LifeLayer
