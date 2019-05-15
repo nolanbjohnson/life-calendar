@@ -16,7 +16,7 @@ import * as ROUTES from '../../helpers/routes'
 const App = props => {
 
   const authUser = useContext(AuthUserContext)
-  
+  console.log(authUser)
 	return (
   		<Router>
          <div className="min-vh-100">

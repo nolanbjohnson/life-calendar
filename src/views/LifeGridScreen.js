@@ -5,7 +5,6 @@ import { withFirebase } from '../providers/Firebase'
 import { AuthUserContext } from '../providers/Session'
 import LifeCalendar from '../components/LifeCalendar'
 import EventList from '../components/EventList'
-import EventForm from '../components/EventForm/'
 import Dropdown from '../components/Dropdown'
 
 const LifeGridScreen = props => {

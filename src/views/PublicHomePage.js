@@ -46,12 +46,12 @@ const PublicHomePage = props => (
 		   	</div>
 		   	<div className="w-100 flex justify-center ba b--near-white">
 		   		<Link to={ROUTES.SIGNUP} className="link">
-		   			<button type="button" className="db b ph5 pv2 mv3 input-reset br2 bn bg-blue white f4 pointer grow">
+		   			<button type="button" className="db b ph5 pv2 mv3 input-reset br2 bn bg-blue white f4 pointer grow" data-testid="signupbutton">
 		   				Sign Up Now
 		   			</button>
 		   		</Link>
 		   	</div>
-		   	<div className="center">
+		   	<div className="center" data-testid="lifecalendar">
 		   		<LifeCalendar />
 		   	</div>
 	    	<div className="fl measure f5">
