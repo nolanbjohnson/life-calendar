@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 
 import { withAuthorization, AuthUserContext } from '../providers/Session'
 import OnboardingForm from '../components/OnboardingForm'
@@ -9,6 +9,16 @@ const Onboarding = (props) => {
 
 	const [events, setEvents] = useState([])
 
+	const extractLayerNames = events => {
+		const layers = events.reduce((names, event) => {
+			    	if (event.layerName) {
+			    		names[event.layerName] = ''
+			    	}
+			    	return names
+			    }, {})
+
+		return Object.keys(layers)
+	}
 	// TODO repeated this entire thing from LifeGridScreen - should move up in the tree
 	useEffect(() => {
 		const eventsRef = props.firebase.userEvents(authUser.uid)
@@ -31,6 +41,13 @@ const Onboarding = (props) => {
 	    return () => eventsRef.off()
 	}, [authUser])
 
+	const layers = useMemo(() => {
+		return extractLayerNames(events)
+	}, [events])
+
+	console.log('layers: ', layers)
+	console.log('events: ', events)
+
 	return (
 		<div className="w-100 mw8 ph3 center">
 			<h2>Welcome</h2>
@@ -42,12 +59,16 @@ const Onboarding = (props) => {
 			    	<p>
 			    		Add some of your life's details to fill in your history.
 			    	</p>
-		    		<OnboardingForm />
+		    		<OnboardingForm 
+						events={ events }
+						layers={ layers }
+					/>
 		    	</div>
 		    	<div className="center">
 		    		<LifeCalendar 
 		    			{ ...(authUser.birthdate && { birthdate: authUser.birthdate }) }
-		    			events={events}
+						events={ events }
+						showLayers={ layers }
 		    		/>
 		    	</div>
 		    </div>

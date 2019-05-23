@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import _ from 'lodash'
+import * as d3Time from 'd3-time'
 import PropTypes from 'prop-types'
 import { pure } from 'recompose'
 import moment from 'moment'
@@ -72,8 +73,14 @@ const eventWithinDateRange = (eventStart, eventEnd, dateStart, dateEnd, rangeTyp
   }
 }
 
-const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvents, highlightNow }) => {
+const dateRangesOverlap = (start1, end1, start2, end2) => {
+  // simplified De Morgan's Law https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+  return Math.max(start1, start2) < Math.min(end1, end2)
+}
 
+const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvents, highlightNow }) => {
+  // TODO take some pointers from this for formatting: https://observablehq.com/@d3/calendar-view
+  // TODO also maybe d3.time can help with the time-related magic I'm trying to do: https://github.com/d3/d3-time
   console.log(' ***** life calendar - render ***** ')
 
   const [displayLayer, setDisplayLayer] = useState(null)
@@ -144,8 +151,20 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvent
   //   }, [events, showLayers, birthdate])
 
   useEffect(() => {
-    const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+    const dtBirthdate = new Date(birthdate)
+    const birthdayEachYear = offset => new Date(Date.UTC(dtBirthdate.getUTCFullYear() + offset, dtBirthdate.getUTCMonth(), dtBirthdate.getUTCDate()))
+    console.log(birthdate, dtBirthdate, birthdayEachYear(0))
+    const years = Array(rows).fill('').map((_, i) => birthdayEachYear(i))
+    const years_weeks = years
+      .map(year => d3Time.utcDay.range(year, d3Time.utcYear.offset(year), 7)) // create weeks for each year
+      .map((year, i) => [ ...year.slice(0, year.length-1)]) // remove last week of year - penultimate week will span through birthdate
 
+    console.log(years_weeks.reduce((weeks, year) => [...weeks, ...year], []))
+  }, [])
+
+  const defaultBirthdate = new Date(birthdate).toISOString() === new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString()
+  
+  useEffect(() => {
     const datesArray = range(squaresPerRow * rows).map((n, i)=> {
       // TODO this misses some days because it assumes years have 52*7=364 days. Maybe include "nextStartDate" in each event?
       // and endDate is nextStartDate - 1, which would add the extra day to the end.
@@ -154,7 +173,10 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvent
       const startDate = moment.utc(birthdate).add(i % squaresPerRow * daysPerSquare, 'd').add(Math.floor(i/squaresPerRow), 'y')
       const endDate = moment.utc(startDate).add(daysPerSquare - 1,'d')
 
-      const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), new Date(event.endDate), startDate, endDate, !event.type==='event'))
+      // const eventsData = events.filter(event => eventWithinDateRange(new Date(event.startDate), new Date(event.endDate), startDate, endDate, !event.type==='event'))
+      const eventsData = events.filter(event => event.type==='event' 
+                                        ? startDate <= new Date(event.startDate) && new Date(event.startDate) <= endDate
+                                        : dateRangesOverlap(new Date(event.startDate), new Date(event.endDate || Date.now()), startDate, endDate))
 
       const layers = showLayers.map(layer => eventsData.find(event => event.layerName === layer) || {})
 
@@ -219,7 +241,9 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvent
     }, [])
     return layers
   }, [showLayers, events])
-	
+  
+  console.log('lifecal/layers: ', layers)
+  
   return (
 		<svg 
 			width={ width + margin.left + margin.right } 
@@ -238,9 +262,10 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvent
           !isLoading && <LifeGrid 
   					dates={ dates }
   					config={ config }
-  					birthdate={ birthdate }
+            birthdate={ birthdate }
             weekNewYear={ weekNewYear }
             showLayers={ showLayers }
+            showYears={ !defaultBirthdate }
 				  />
         }
 
@@ -443,12 +468,16 @@ LifeCalendar.propTypes = {
   birthdate: PropTypes.string,
   events: PropTypes.array,
   showLayers: PropTypes.array,
+  highlightEvent: PropTypes.bool,
+  highlightNow: PropTypes.bool,
 }
 
 LifeCalendar.defaultProps = {
   birthdate: new Date(Date.UTC(new Date().getFullYear(),0,1)).toISOString().replace(/T.*/,""),
   events: [],
   showLayers: [],
+  highlightEvents: true,
+  highlightNow: true
 }
 
 LifeCalendar.whyDidYouRender = true

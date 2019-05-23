@@ -99,7 +99,7 @@ const LifeGridScreen = props => {
 	return (
 		<div className="w-100 mw8 ph3 center">
 			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridGap: "1rem"}}>
-				<div className="center flex flex-column">
+				<div className="relative center flex flex-column">
 					<div className="self-end">
 						<Dropdown 
 							buttonText="..."
@@ -126,6 +126,13 @@ const LifeGridScreen = props => {
 						highlightEvents={ optionNamesSelected.indexOf(showEvents) !== -1 }
 						highlightNow={ optionNamesSelected.indexOf(showNow) !== -1 }
 					/>
+					<div
+						className="absolute bottom-2 w-100 bg--white h5 unselectable"
+						style={{backgroundImage: "-webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(255, 255, 255, 1)))",
+								pointerEvents: "none"}}
+					>
+					&nbsp;
+					</div>
 				</div>
 				<EventList
 					events={ events }

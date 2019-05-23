@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import onClickOutside from 'react-onclickoutside'
 
+
+// TODO instead of two separate components, maybe this is a Compound Components pattern? https://github.com/kentcdodds/advanced-react-patterns-v2/blob/master/src/exercises-final/03.js
 const Section = ({header, items, selectedItems, toggleSelection}) => (
 	<div>
 		<div className="ph3 pv1 f6 small-caps gray">{ header }</div>

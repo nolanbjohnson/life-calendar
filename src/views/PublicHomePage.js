@@ -20,7 +20,7 @@ const Paragraph = styled.p.attrs({
 
 const PublicHomePage = props => (
 	<div className="w-100 mw8 ph3 center">
-    	<div className="w-100 flex flex-row flex-wrap lh-copy">
+    	<div className="w-100 flex flex-row flex-wrap lh-copy ">
     		<div className="measure pa2 f5">
 		    	<p className="f1 lh-title mt0 mb4">Rethinking your life, one week at a time</p>
 		    	<p>

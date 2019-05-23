@@ -6,13 +6,6 @@ import { AuthUserContext } from '../../providers/Session'
 
 import { Form } from '../Utilities'
 
-const templateSchoolLayer = [
-	{ name: "Kindergarten", startAge: 5, endAge: 6},
-	{ name: "Elementary", startAge: 6, endAge: 11},
-	{ name: "Middle", startAge: 11, endAge: 14},
-	{ name: "High", startAge: 14, endAge: 18},
-]
-
 const Button = styled.button.attrs(({ showOnHover }) => ({
 	className: `button-reset bw0 f5 grow-large pointer bg-transparent ${showOnHover ? 'child' : ''}`
 }))``
@@ -55,44 +48,39 @@ const LayerForm = props => {
 
 	console.log('layerform', authUser)
 
-	const [layerName, setLayerName]	= useState('')
-	const [schoolLayer, setSchoolLayer] = useState([])
-	const birthdate = new Date(authUser.birthdate)
-	const birthYear = birthdate.getFullYear()
-
+	const [layerName, setLayerName]	= useState(props.templateName || "")
+	const [layers, setLayers] = useState(props.templateLayer || [])
 
 	useEffect(() => {
-		resetForm()
-	}, [authUser])
+		if (props.templateName && props.templateLayer) {
+			setLayerName(props.templateName)
+			setLayers(props.templateLayer)
+		} else {
+			resetForm()
+		}
+	}, [props.templateName, props.templateLayer])
 	
 	const resetForm = () => {
-		const schoolLayer = templateSchoolLayer.map(part => {
-			return {
-				name: part.name,
-				startDate: moment.utc(Date.UTC(birthYear + part.startAge, 8, 1)).format("YYYY-MM-DD"), // typical start Sept 1
-				endDate: moment.utc(Date.UTC(birthYear + part.endAge, 7, 31)).format("YYYY-MM-DD"), // typical end June 1
-			}
-		})
-		setSchoolLayer(schoolLayer)
-		setLayerName('School')
+		setLayers([{name: '', startDate: '', endDate: ''}])
+		setLayerName('')
 	}
 
 	const addLayer = () => {
-		setSchoolLayer([...schoolLayer, {name: '', startDate: '', endDate: ''}])
+		setLayers([...layers, {name: '', startDate: '', endDate: ''}])
 	}
 
 	const removeLayer = (index) => {
-		setSchoolLayer([
-			...schoolLayer.slice(0, index),
-			...schoolLayer.slice(index + 1),
+		setLayers([
+			...layers.slice(0, index),
+			...layers.slice(index + 1),
 		])
 	}
 
 	const handleLayerUpdate = (event, index) => {
-		setSchoolLayer([
-			...schoolLayer.slice(0, index),
-			{ ...schoolLayer[index], [event.target.name]: event.target.value},
-			...schoolLayer.slice(index + 1),
+		setLayers([
+			...layers.slice(0, index),
+			{ ...layers[index], [event.target.name]: event.target.value},
+			...layers.slice(index + 1),
 		])
 	}
 
@@ -102,7 +90,7 @@ const LayerForm = props => {
 
 		let newEvents = {}
 
-		schoolLayer.forEach((layer, i) => {
+		layers.forEach((layer, i) => {
 			const key = eventsRef.push().key
 			newEvents[key] = {
 				...layer, 
@@ -114,13 +102,15 @@ const LayerForm = props => {
 		})
 
 		eventsRef.update(newEvents)
+
+		resetForm()
+
 		props.next()
 	}
 
 	if (!props.visible) return null
 	return (
 		<Form.Form onSubmit={ event => handleSubmit(event, authUser) } style={{ overflow: "auto", display: props.visible ? "block" : "none" }}>
-			<p>Next let's add some details about you in the form of a Life Layer.</p>
 			<Form.Section>
 			<label htmlFor="layer" className="f6 b db mb2 tl">
 				Layer Name
@@ -128,6 +118,7 @@ const LayerForm = props => {
 			<Form.Input 
 				name="layerName" 
 				type="text"
+				placeholder="Add a name for the layer"
 				value={layerName}
 				onChange={e => setLayerName(e.target.value)}
 			/>
@@ -140,7 +131,7 @@ const LayerForm = props => {
 					<li className="list"><small>End Date</small></li>
 				</ul>
 				{
-					schoolLayer.map((part, i) => (
+					layers.map((part, i) => (
 							<React.Fragment key={i}>
 								{ i > 0 ? <hr className="mh2 mv1 pa0 near-white" /> : null }
 								<LayerItem part={part} index={i} onChange={handleLayerUpdate} >
@@ -159,7 +150,6 @@ const LayerForm = props => {
 				<button type="button" title="add a layer item" className={`self-end w2 h2 b pv2 tc mh1 input-reset ba b--black bg-transparent f5 pointer grow`} onClick={ addLayer }><span role="img" aria-label="add layer item">➕</span></button>
 			</section>
 			<button type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-green white f4 pointer grow`} ><span role="img" aria-label="backpack">🎒</span> Add the Layer <span role="img" aria-label="backpack">🎒</span></button>
-			<small>Layers represent the background color of your life grid - they shouldn't overlap</small>
 		</Form.Form>
 	)
 }

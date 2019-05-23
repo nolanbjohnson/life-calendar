@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import LifeBox from './LifeBox'
 
-const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers }) => {
+const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers, showYears }) => {
 	
 	const { squareSize, squareMargin, paddingMinorHorizontal } = config
 
@@ -26,8 +26,8 @@ const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers }) => {
 	                    { date.column }
 	                  </text> 
 	                : null 
-	               */ }
-	              { 
+								 */ }
+	              { /* left side age numbers */
 	                date.row % 5 === 0 && date.column === 0 && date.row !== 0
 	                ? <text fontSize="0.5rem" 
 	                        textAnchor="end" 
@@ -36,6 +36,18 @@ const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers }) => {
 	                        className="unselectable"
 	                  > 
 	                    { date.row } 
+	                  </text> 
+	                : null 
+								}
+								{ /* right side year numbers */
+	                showYears && (parseInt(date.startDate.substring(0,4)) % 5 === 0 || date.row === 0) && date.column === 51
+	                ? <text fontSize="0.5rem" 
+	                        textAnchor="start" 
+	                        alignmentBaseline="hanging" 
+	                        transform={`translate(9,0)`}
+	                        className="unselectable"
+	                  > 
+	                    { date.startDate.substring(0,4) } 
 	                  </text> 
 	                : null 
 	              }

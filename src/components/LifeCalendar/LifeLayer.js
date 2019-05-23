@@ -6,11 +6,11 @@ import { pure } from 'recompose'
 //.... wait that sounds like d3.domain / d3.range - maybe that's what I should be using....
 
 const LifeLayerBase = ({ dates, config, children, className }) => {
-
+	// TODO probably this should use the context API to consume config parameters that are shared between all life calendar parts
 	const { squareSize, squareMargin, weekNewYear, paddingMinorHorizontal } = config
 
 	return (
-		<g className={className}>
+		<g className={className} style={{pointerEvents: "none"}}>
 			{
 			dates.map((date,i) => (
 				<g
