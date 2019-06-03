@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { withFirebase } from '../../providers/Firebase'
 import { AuthUserContext } from '../../providers/Session'
 import DatePicker from '../DatePicker/'
+import TextEditor from '../TextEditor'
 import EventForm from '../EventForm'
 
 
@@ -15,25 +16,42 @@ const Button = styled.button.attrs(({ showOnHover }) => ({
 	className: `button-reset bw0 f5 grow-large pointer bg-transparent ${showOnHover ? 'child' : ''}`
 }))``
 
-const EventListItem = ({ event, onHover, ...props }) => {
+const EventListItem = ({ event, onHover, handleDateUpdate, handleNameUpdate, ...props }) => {
 	const [dateEditMode, setDateEditMode] = useState(false)
+	const [textEditMode, setTextEditMode] = useState(false)
 
+	const openDateEditor = () => {
+		setDateEditMode(true)
+		setTextEditMode(false)
+	}
+
+	const openTextEditor = () => {
+		setDateEditMode(false)
+		setTextEditMode(true)
+	}
+	
 	// TODO date picker doesn't send an updated to firebase - it just looks cool
 	return (
 		<EventListItemTag onMouseOver={() => onHover(event)} onMouseOut={() => onHover('')}>
 			{ props.children }
 			<DatePicker
-	          initialDate={ new Date(event.startDate).toISOString().replace(/T.*/,"") }
-	          format="MMM DD, YYYY"
-	          editMode={ dateEditMode }
-	          closeForm={ () => setDateEditMode(false) }
-	          openForm={ () => setDateEditMode(true) }
-	          onSubmit={ (e) => console.log(e.target.value) }
-	          inline
-	        />
-	        <span>
-			{ `: ${event.name} ${event.emoji}` }
-			</span>
+				initialDate={ new Date(event.startDate).toISOString().replace(/T.*/,"") }
+				format="MMM DD, YYYY"
+				editMode={ dateEditMode }
+				closeForm={ () => setDateEditMode(false) }
+				openForm={ openDateEditor }
+				onSubmit={ handleDateUpdate }
+				inline
+	    />{': '}
+			<TextEditor
+				initialText={ event.name }
+				editMode={ textEditMode }
+				closeForm={ () => setTextEditMode(false) }
+				openForm={ openTextEditor }
+				onSubmit={ handleNameUpdate }
+				inline
+			/>
+	    <span> { event.emoji } </span>
 		</EventListItemTag>
 	)
 }
@@ -47,6 +65,20 @@ const EventList = props => {
 
 	const removeItem = eventId => {
 		props.firebase.event(eventId).remove()
+	}
+
+	const updateItem = (eventId, fields) => {
+		props.firebase.event(eventId).update(
+			{
+				...fields, 
+				 updatedAt: props.firebase.serverValue.TIMESTAMP
+			}, error => {
+				if (error) {
+					console.log(error)
+				} else {
+					console.log("Successful!")
+				}
+		})
 	}
 
 	useEffect(() => {
@@ -80,7 +112,14 @@ const EventList = props => {
 	// }, [])
 	const eventListItems = events.sort((a, b) => a.startDate > b.startDate ? 1 : -1 )
 								.map(event => (
-									<EventListItem id={event.uid} key={event.uid} event={event} onHover={props.showEvent}>
+									<EventListItem 
+										id={event.uid} 
+										key={event.uid} 
+										event={event} 
+										onHover={props.showEvent} 
+										handleDateUpdate={ (startDate) => updateItem(event.uid, {startDate}) }
+										handleNameUpdate={ (name) => updateItem(event.uid, {name}) }
+									>
 										<Button 
 											type="button" 
 											title="delete"
@@ -91,7 +130,7 @@ const EventList = props => {
 										</Button>
 									</EventListItem>
 								))
-
+	console.log('eventlist events', events)
 	return (
 		<div>
 			<h2>

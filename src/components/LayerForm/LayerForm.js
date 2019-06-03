@@ -90,6 +90,8 @@ const LayerForm = props => {
 
 		let newEvents = {}
 
+		console.log(layers)
+
 		layers.forEach((layer, i) => {
 			const key = eventsRef.push().key
 			newEvents[key] = {

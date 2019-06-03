@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
 
-const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openForm, inline }) => {
-	const [date, setDate] = useState(initialDate)
+const TextEditor = ({ initialText, editMode, onSubmit, closeForm, openForm, inline }) => {
+	const [text, setText] = useState(initialText)
 	const [hovered, setHovered] = useState(false)
 
 	useEffect(() => {
-		setDate(initialDate)
-	}, [initialDate])
+		setText(initialText)
+	}, [initialText])
 	
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		onSubmit(date)
+		onSubmit(text)
 		closeForm()
 	}
 
 	const resetForm = () => {
-		setDate(initialDate)
+		setText(initialText)
 		closeForm()
 	}
 
@@ -25,11 +24,11 @@ const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openFo
 		? (
 			<form onSubmit={ handleSubmit } style={{ display: inline ? "inline-block" : "block", padding: "0", margin: "0" }}>
 				<input 
-					value={ date }
-					type="date"
-					name="date"
+					value={ text }
+					type="text"
+					name="text"
 					className="input-reset black bw0"
-					onChange={ (e) => setDate(e.target.value) } 
+					onChange={ (e) => setText(e.target.value) } 
 				/>
 				<button 
 					type="submit"
@@ -46,9 +45,9 @@ const DatePicker = ({ initialDate, format, editMode, onSubmit, closeForm, openFo
 				</button>
 		  	</form>
 		  )
-		: <span onClick={ openForm } onMouseOver={() => setHovered(true) } onMouseOut={() => setHovered(false) } style={{ color: hovered ? "steelblue" : "inherit", cursor: "pointer" }}>{ moment.utc(date).format(format) }</span>
+		: <span onClick={ openForm } onMouseOver={() => setHovered(true) } onMouseOut={() => setHovered(false) } style={{ color: hovered ? "steelblue" : "inherit", cursor: "pointer" }}>{ text }</span>
 
 	)
 }
 
-export default DatePicker
+export default TextEditor

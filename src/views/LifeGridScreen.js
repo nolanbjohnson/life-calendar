@@ -10,12 +10,11 @@ import Dropdown, { Section as DropdownSection } from '../components/Dropdown'
 const keyLocalStorageShowOptions = 'showOptions'
 const keyLocalStorageLayerOptions = 'showLayers'
 
-
 const LifeGridScreen = props => {
 
 	const authUser = useContext(AuthUserContext)
-	const optionNames = ["Show Events", "Show Now"]
-	const [showEvents, showNow] = optionNames
+	const optionNames = ["Show Events", "Show Now", "Show Future"]
+	const [showEvents, showNow, showFuture] = optionNames
 
 	const [events, setEvents] = useState([])
 	const [showEvent, setShowEvent] = useState(null)
@@ -123,6 +122,7 @@ const LifeGridScreen = props => {
 						events={ events }
 						showEvent={ showEvent }
 						showLayers={ layerNamesSelected }
+						showFuture={ optionNamesSelected.indexOf(showFuture) !== -1 }
 						highlightEvents={ optionNamesSelected.indexOf(showEvents) !== -1 }
 						highlightNow={ optionNamesSelected.indexOf(showNow) !== -1 }
 					/>

@@ -78,7 +78,7 @@ const dateRangesOverlap = (start1, end1, start2, end2) => {
   return Math.max(start1, start2) < Math.min(end1, end2)
 }
 
-const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvents, highlightNow }) => {
+const LifeCalendar = ({ birthdate, events, showEvent, showLayers, showFuture, highlightEvents, highlightNow }) => {
   // TODO take some pointers from this for formatting: https://observablehq.com/@d3/calendar-view
   // TODO also maybe d3.time can help with the time-related magic I'm trying to do: https://github.com/d3/d3-time
   console.log(' ***** life calendar - render ***** ')
@@ -190,6 +190,7 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvent
         row: Math.floor(i/squaresPerRow),
         column: i % squaresPerRow,
         current: defaultBirthdate ? false : startDate <= nowDate && endDate.add(1, 'd') >= nowDate,
+        future: startDate > nowDate,
         data: {
           events: eventsData.filter(event => event.type === 'event'),
           homes: eventsData.filter(event => event.type === 'home'),
@@ -260,11 +261,9 @@ const LifeCalendar = ({ birthdate, events, showEvent, showLayers, highlightEvent
 
         {
           !isLoading && <LifeGrid 
-  					dates={ dates }
+  					dates={ showFuture ? dates : dates.filter(date => !date.future ) }
   					config={ config }
-            birthdate={ birthdate }
             weekNewYear={ weekNewYear }
-            showLayers={ showLayers }
             showYears={ !defaultBirthdate }
 				  />
         }
@@ -470,6 +469,7 @@ LifeCalendar.propTypes = {
   showLayers: PropTypes.array,
   highlightEvent: PropTypes.bool,
   highlightNow: PropTypes.bool,
+  showFuture: PropTypes.bool,
 }
 
 LifeCalendar.defaultProps = {
@@ -477,7 +477,8 @@ LifeCalendar.defaultProps = {
   events: [],
   showLayers: [],
   highlightEvents: true,
-  highlightNow: true
+  highlightNow: true,
+  showFuture: true,
 }
 
 LifeCalendar.whyDidYouRender = true

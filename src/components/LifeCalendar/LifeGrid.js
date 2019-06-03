@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import LifeBox from './LifeBox'
 
-const LifeGrid = ({ dates, birthdate, config, weekNewYear, showLayers, showYears }) => {
+const LifeGrid = ({ dates, config, weekNewYear, showYears }) => {
 	
 	const { squareSize, squareMargin, paddingMinorHorizontal } = config
 
