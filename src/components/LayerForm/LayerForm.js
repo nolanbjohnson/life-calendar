@@ -85,6 +85,7 @@ const LayerForm = props => {
 	}
 
 	const handleSubmit = (event, authUser) => {
+		console.log('submitting...')
 		event.preventDefault()
 		const eventsRef = props.firebase.events() // set ref to firebase db
 
@@ -107,7 +108,7 @@ const LayerForm = props => {
 
 		resetForm()
 
-		props.next()
+		if (props.next) props.next()
 	}
 
 	if (!props.visible) return null
@@ -151,7 +152,7 @@ const LayerForm = props => {
 				}
 				<button type="button" title="add a layer item" className={`self-end w2 h2 b pv2 tc mh1 input-reset ba b--black bg-transparent f5 pointer grow`} onClick={ addLayer }><span role="img" aria-label="add layer item">➕</span></button>
 			</section>
-			<button type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-green white f4 pointer grow`} ><span role="img" aria-label="backpack">🎒</span> Add the Layer <span role="img" aria-label="backpack">🎒</span></button>
+			<button onClick={ event => handleSubmit(event, authUser) } type="submit" className={`db b ph2 pv2 mt3 mb1 input-reset br2 bn bg-green white f4 pointer grow`} ><span role="img" aria-label="backpack">🎒</span> Add the Layer <span role="img" aria-label="backpack">🎒</span></button>
 		</Form.Form>
 	)
 }

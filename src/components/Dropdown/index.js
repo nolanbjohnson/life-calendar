@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import onClickOutside from 'react-onclickoutside'
 
 
@@ -19,21 +19,14 @@ const Section = ({header, items, selectedItems, toggleSelection}) => (
 	</div>
 )
 
-const Dropdown = ({ buttonText, beginOpen, children }) => {
-	const [isOpen, setIsOpen] = useState(beginOpen || false)
+const Dropdown = ({ isOpen, handleClose, children }) => {
 
-	Dropdown.handleClickOutside = () => setIsOpen(false)
+	Dropdown.handleClickOutside = handleClose
 	return (
 		<div className="relative flex flex-column">
-			<button 
-				type="button"
-				onClick={() => setIsOpen(!isOpen)}
-				className="button-reset input-reset bg-transparent bw0 f3 focus"
-			>
-			{ buttonText }
-			</button>
+			
 			{ isOpen && 
-				<div className="absolute z-999 top-2 flex flex-column w5 ma0 ph0 pv3 br2 bg-white shadow-1">
+				<div className="absolute z-999 flex flex-column w5 ma0 ph0 pv3 br2 bg-white shadow-1">
 					{ 
 						children.map((child, index) => (
 							[

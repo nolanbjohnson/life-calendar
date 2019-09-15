@@ -5,6 +5,8 @@ import { withFirebase } from '../providers/Firebase'
 import { AuthUserContext } from '../providers/Session'
 import LifeCalendar from '../components/LifeCalendar'
 import EventList from '../components/EventList'
+import Modal from '../components/Modal'
+import LayerForm from '../components/LayerForm'
 import Dropdown, { Section as DropdownSection } from '../components/Dropdown'
 
 const keyLocalStorageShowOptions = 'showOptions'
@@ -23,6 +25,8 @@ const LifeGridScreen = props => {
 	const [layerNamesSelected, setLayerNamesSelected] = useState([])
 	const [optionNamesSelected, setOptionNamesSelected] = useState(JSON.parse(localStorage.getItem(keyLocalStorageShowOptions)) || optionNames)
 
+	const [showModal, setShowModal] = useState(false)
+	const [showDropDown, setShowDropDown] = useState(false)
 
 	const handleEventHover = event => {
 		console.log('** handleEventHover **')
@@ -99,12 +103,33 @@ const LifeGridScreen = props => {
 		<div className="w-100 mw8 ph3 center">
 			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridGap: "1rem"}}>
 				<div className="relative center flex flex-column">
+					<Modal 
+						isOpen = { showModal }
+						handleClose = { () => setShowModal(false) }
+					>
+						<LayerForm 
+							firebase={ props.firebase } 
+							visible
+						/>
+					</Modal>
 					<div className="self-end">
+					<button 
+						type="button"
+						onClick={ () => setShowDropDown(true) }
+						className="button-reset input-reset bg-transparent bw0 f3 focus"
+					>
+						...
+					</button>
 						<Dropdown 
-							buttonText="..."
+							isOpen = {showDropDown}
+							handleClose = { () => setShowDropDown(false) }
 						>
+							
 							<DropdownSection
-								header="Layers"
+								header={ <React.Fragment>
+											<span>Layers</span>
+											<span className="w2 ml1" onClick= {() => { setShowModal(true); setShowDropDown(false) } } role="img" aria-label="edit">✏️</span> 
+										</React.Fragment>}
 								items={ layerNames }
 								selectedItems={ layerNamesSelected }
 								toggleSelection={ name => toggleSelected(name, layerNamesSelected, setLayerNamesSelected) }
